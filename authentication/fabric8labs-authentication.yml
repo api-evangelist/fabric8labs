@@ -1,0 +1,98 @@
+generated: '2026-08-12'
+method: probed
+source: >-
+  Live anonymous probes of www.fabric8labs.com plus the RFC 8414 / RFC 9728 documents saved in
+  well-known/. Fabric8Labs publishes no authentication documentation of any kind — there is no
+  developer portal, no API reference and no docs host — so every statement below is an observed
+  runtime fact, not a provider claim.
+summary:
+  types:
+  - none
+  - oauth2
+  api_key_in: []
+  oauth2_flows:
+  - authorizationCode
+  note: >-
+    The surface splits cleanly in two. The public WordPress REST content surface (wp/v2) requires no
+    credential at all: it answers anonymously with HTTP 200 and declares no securityScheme, which is
+    why 0-working/derive-authentication.py found no schemes to aggregate across the seven OpenAPI
+    documents in openapi/. The MCP endpoint is the opposite: it is fully gated behind an OAuth 2.1
+    authorization-code + PKCE flow served by the site itself.
+schemes:
+- name: anonymous
+  type: none
+  applies_to: https://www.fabric8labs.com/wp-json/wp/v2
+  description: >-
+    Every operation in the seven OpenAPI documents under openapi/ was verified to return HTTP 200
+    with no Authorization header. WordPress applies read permission per post status, so only
+    published records are visible anonymously.
+  sources:
+  - openapi/fabric8labs-posts-api-openapi.yml
+  - openapi/fabric8labs-pages-api-openapi.yml
+  - openapi/fabric8labs-media-api-openapi.yml
+  - openapi/fabric8labs-team-api-openapi.yml
+  - openapi/fabric8labs-taxonomy-api-openapi.yml
+  - openapi/fabric8labs-search-api-openapi.yml
+  - openapi/fabric8labs-discovery-api-openapi.yml
+- name: MCPOAuth
+  type: oauth2
+  applies_to: https://www.fabric8labs.com/wp-json/mcp/mcp-oauth-server
+  description: >-
+    OAuth 2.1 protection on the WordPress MCP Adapter endpoint, discoverable via RFC 9728
+    protected-resource metadata. An anonymous JSON-RPC tools/list returns HTTP 401 mcp_unauthorized
+    with WWW-Authenticate Bearer realm="https://www.fabric8labs.com",
+    resource_metadata="https://www.fabric8labs.com/.well-known/oauth-protected-resource".
+  flows:
+  - flow: authorizationCode
+    authorizationUrl: https://www.fabric8labs.com/oauth/authorize
+    tokenUrl: https://www.fabric8labs.com/oauth/token
+    revocationUrl: https://www.fabric8labs.com/oauth/revoke
+    pkce: S256
+    grant_types:
+    - authorization_code
+    - refresh_token
+    scopes:
+      mcp: The only scope the authorization server advertises. Grants access to the MCP endpoint.
+    token_endpoint_auth_methods:
+    - none
+    client_registration: >-
+      No dynamic client registration endpoint is advertised. The metadata sets
+      client_id_metadata_document_supported = true, so clients are expected to identify themselves
+      with a client-ID metadata document URL rather than pre-registering.
+  sources:
+  - well-known/fabric8labs-oauth-authorization-server.json
+  - well-known/fabric8labs-oauth-protected-resource.json
+- name: WordPressApplicationPasswords
+  type: http
+  scheme: basic
+  applies_to: https://www.fabric8labs.com/wp-json/wp/v2
+  description: >-
+    The route index registers /wp/v2/users/{user_id}/application-passwords, the WordPress
+    application-password endpoints, which means HTTP Basic with an application password is the
+    mechanism for the authenticated write half of the REST API. This is administrative access for
+    site operators, not a developer credential Fabric8Labs issues to third parties — there is no
+    signup, no key request and no pricing for it.
+  sources:
+  - openapi/_source/fabric8labs-wp-json-root.json
+gated_surfaces:
+- endpoint: /wp-json/wp/v2/users
+  status: 401
+  code: rest_user_cannot_view
+- endpoint: /wp-json/wp/v2/settings
+  status: 401
+  code: rest_forbidden
+- endpoint: /wp-json/wp-abilities/v1/abilities
+  status: 401
+  code: rest_forbidden
+- endpoint: /wp-json/gf/v2/forms
+  status: 401
+  code: rest_forbidden
+- endpoint: /wp-json/mcp/mcp-oauth-server
+  status: 401
+  code: mcp_unauthorized
+- endpoint: /wp-json/wp/v2/comments
+  status: 403
+  code: rest_comment_disabled
+x-evidence:
+  fetched: '2026-08-12'
+  host: www.fabric8labs.com

@@ -1,0 +1,50 @@
+generated: '2026-08-12'
+method: probed
+source: https://www.fabric8labs.com/.well-known/oauth-authorization-server
+note: >-
+  Fabric8Labs publishes no scopes reference page — there is no developer portal or documentation
+  host to search. This artifact is therefore built entirely from the machine-readable RFC 8414 and
+  RFC 9728 metadata the site actually serves, both saved verbatim under well-known/. Running
+  0-working/derive-oauth-scopes.py returned zero, correctly: the seven OpenAPI documents under
+  openapi/ describe the anonymous read surface and declare no oauth2 securityScheme, so the only
+  OAuth surface on this domain is the one the well-known metadata advertises for the MCP endpoint.
+  One scope is published. It was not possible to exercise it — the token endpoint requires a client
+  identity and there is no anonymous path to a grant — so no scope-to-capability mapping is claimed.
+schemes:
+- name: MCPOAuth
+  source: well-known/fabric8labs-oauth-authorization-server.json
+  issuer: https://www.fabric8labs.com
+  protected_resource: https://www.fabric8labs.com/wp-json/mcp/mcp-oauth-server
+  flows:
+  - flow: authorizationCode
+    authorizationUrl: https://www.fabric8labs.com/oauth/authorize
+    tokenUrl: https://www.fabric8labs.com/oauth/token
+    revocationUrl: https://www.fabric8labs.com/oauth/revoke
+    code_challenge_methods:
+    - S256
+scopes:
+- scope: mcp
+  description: >-
+    The single scope advertised in scopes_supported by both the authorization-server metadata and
+    the protected-resource metadata. It gates the WordPress MCP Adapter endpoint at
+    /wp-json/mcp/mcp-oauth-server. The provider publishes no description of what the scope grants
+    and no finer-grained scopes; the tool set it unlocks could not be enumerated because
+    tools/list returns HTTP 401 anonymously.
+  flows:
+  - authorizationCode
+  sources:
+  - well-known/fabric8labs-oauth-authorization-server.json
+  - well-known/fabric8labs-oauth-protected-resource.json
+coverage:
+  scopes_published: 1
+  scopes_documented_by_provider: 0
+  granularity: single-scope
+x-evidence:
+  fetched: '2026-08-12'
+  urls:
+  - url: https://www.fabric8labs.com/.well-known/oauth-authorization-server
+    status: 200
+  - url: https://www.fabric8labs.com/.well-known/oauth-protected-resource
+    status: 200
+  - url: https://www.fabric8labs.com/wp-json/mcp/mcp-oauth-server
+    status: 401

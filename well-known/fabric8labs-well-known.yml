@@ -1,0 +1,57 @@
+generated: '2026-08-12'
+method: probed
+source: live GET of /.well-known/* on every host named in apis.yml and in the OpenAPI servers[]
+host: https://www.fabric8labs.com
+note: >-
+  Two of the probed paths return real documents. www.fabric8labs.com serves RFC 8414 OAuth 2.0
+  Authorization Server Metadata and RFC 9728 OAuth 2.0 Protected Resource Metadata, both emitted by
+  the WordPress MCP Adapter that is installed on the site. The protected-resource document names
+  https://www.fabric8labs.com/wp-json/mcp/mcp-oauth-server as the guarded resource and "mcp" as the
+  only supported scope. Every other well-known path returns HTTP 404 with the site's HTML 404 page,
+  which is recorded here as an absence and is not counted as a document. There is no
+  /.well-known/security.txt, no OpenID Connect discovery document, no api-catalog, no ai-plugin.json
+  and no A2A agent card on this host. Only www.fabric8labs.com was probed because it is the sole
+  host in the profile — api.fabric8labs.com, docs.fabric8labs.com and developer.fabric8labs.com all
+  fail DNS resolution (NXDOMAIN).
+documents:
+- path: /.well-known/oauth-authorization-server
+  status: 200
+  content_type: application/json
+  file: fabric8labs-oauth-authorization-server.json
+  spec: RFC 8414
+  note: Real JSON document. Declares issuer https://www.fabric8labs.com, authorization/token/revocation
+    endpoints under /oauth/, authorization_code + refresh_token grants, PKCE S256, and a single
+    supported scope "mcp".
+- path: /.well-known/oauth-protected-resource
+  status: 200
+  content_type: application/json
+  file: fabric8labs-oauth-protected-resource.json
+  spec: RFC 9728
+  note: Real JSON document. Binds the MCP endpoint to the site's own authorization server and
+    declares bearer_methods_supported [header] and scopes_supported [mcp].
+- path: /.well-known/security.txt
+  status: 404
+  spec: RFC 9116
+- path: /.well-known/openid-configuration
+  status: 404
+- path: /.well-known/api-catalog
+  status: 404
+  spec: RFC 9727
+- path: /.well-known/ai-plugin.json
+  status: 404
+- path: /.well-known/agent-card.json
+  status: 404
+  spec: A2A 1.0.0
+- path: /.well-known/agent.json
+  status: 404
+  spec: A2A pre-0.3 legacy
+- path: /.well-known/mcp
+  status: 404
+x-evidence:
+  fetched: '2026-08-12'
+  hosts_probed:
+  - www.fabric8labs.com
+  hosts_unresolvable:
+  - api.fabric8labs.com
+  - docs.fabric8labs.com
+  - developer.fabric8labs.com

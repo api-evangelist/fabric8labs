@@ -1,0 +1,29 @@
+generated: '2026-08-12'
+method: searched
+source: https://www.fabric8labs.com/
+plan_count: 0
+plans: []
+note: >-
+  Fabric8Labs publishes no pricing of any kind. /pricing/ and /plans/ both return HTTP 404, no
+  pricing page appears in the site's page sitemap (27 pages, all marketing/technology/market
+  content), and there is no signup, no self-service purchase path and no quote configurator. The
+  company is a contract manufacturing foundry: engagement runs entirely through the contact form at
+  /contact-us/, and component pricing is negotiated per programme. This is a plan_count of 0 because
+  the provider publishes nothing, not because nothing was checked. The API surface described in this
+  repo is the site's own WordPress REST API, which is free and anonymous and is not a commercial
+  product with tiers.
+commercial_model: contact-sales
+self_service: false
+free_tier: null
+signup_url: null
+x-evidence:
+  fetched: '2026-08-12'
+  urls:
+  - url: https://www.fabric8labs.com/pricing/
+    status: 404
+  - url: https://www.fabric8labs.com/plans/
+    status: 404
+  - url: https://www.fabric8labs.com/contact-us/
+    status: 200
+  - url: https://www.fabric8labs.com/page-sitemap.xml
+    status: 200

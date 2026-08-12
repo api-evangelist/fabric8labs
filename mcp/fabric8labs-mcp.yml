@@ -1,0 +1,82 @@
+generated: '2026-08-12'
+method: probed
+status: published
+source: https://www.fabric8labs.com/wp-json/mcp
+note: >-
+  This is a real, live MCP endpoint served from Fabric8Labs' own host, but it must be read for what
+  it is: WordPress MCP Adapter infrastructure sitting on the company's marketing site, not a
+  Fabric8Labs product API. The company ships metal components, not software, and runs no developer
+  program. The endpoint is registered under the WordPress REST "mcp" namespace and is correctly
+  advertised through RFC 9728 protected-resource metadata, which is more discovery hygiene than most
+  MCP deployments manage. It is authentication-gated end to end, so the tool list is unknown.
+server:
+  name: fabric8labs
+  transport: http
+  url: https://www.fabric8labs.com/wp-json/mcp/mcp-oauth-server
+  protocol: JSON-RPC 2.0
+  implementation: WordPress MCP Adapter (wp-json "mcp" namespace)
+  discovery: https://www.fabric8labs.com/.well-known/oauth-protected-resource
+endpoints:
+- path: /wp-json/mcp/mcp-oauth-server
+  methods:
+  - POST
+  - GET
+  - DELETE
+  auth: oauth2 (scope "mcp")
+  anonymous_status: 401
+- path: /wp-json/mcp/mcp-adapter-default-server
+  methods:
+  - POST
+  - GET
+  - DELETE
+  auth: oauth2 (scope "mcp")
+  anonymous_status: 401
+- path: /wp-json/mcp
+  methods:
+  - GET
+  auth: none
+  anonymous_status: 200
+  note: The namespace route index. This is the only anonymously readable part of the MCP surface and
+    it lists routes, not tools.
+authentication:
+  type: oauth2
+  scope: mcp
+  authorization_server: https://www.fabric8labs.com
+  authorization_endpoint: https://www.fabric8labs.com/oauth/authorize
+  token_endpoint: https://www.fabric8labs.com/oauth/token
+  pkce: S256
+  challenge: >-
+    WWW-Authenticate: Bearer realm="https://www.fabric8labs.com",
+    resource_metadata="https://www.fabric8labs.com/.well-known/oauth-protected-resource"
+tools:
+  enumerated: false
+  count: null
+  reason: >-
+    An anonymous JSON-RPC tools/list POST returns HTTP 401 with {"code":"mcp_unauthorized",
+    "message":"MCP authentication required."}. The companion WordPress Abilities registry at
+    /wp-json/wp-abilities/v1/abilities — the mechanism that backs MCP tools in this adapter — also
+    returns 401 rest_forbidden, so the tool names could not be read from there either. Fabric8Labs
+    publishes no llms.txt and no MCP documentation, so there is no published fallback list. The tool
+    set and its input schemas require authenticated introspection. NOTHING IS GUESSED HERE: no
+    candidate tools are listed, because listing derived tools alongside a published server would
+    misrepresent what this provider actually exposes.
+related_surfaces:
+  abilities_registry: https://www.fabric8labs.com/wp-json/wp-abilities/v1/abilities
+  abilities_status: 401
+  openapi: openapi/
+  openapi_note: >-
+    The seven OpenAPI documents in openapi/ describe the anonymous wp/v2 read surface, which is a
+    different projection of the same WordPress core than the MCP endpoint serves. See
+    mcp/fabric8labs-tool-crosswalk.yml for how far that binding can honestly be taken.
+x-evidence:
+  fetched: '2026-08-12'
+  urls:
+  - url: https://www.fabric8labs.com/wp-json/mcp
+    status: 200
+  - url: https://www.fabric8labs.com/wp-json/mcp/mcp-oauth-server
+    status: 401
+    method: POST tools/list
+  - url: https://www.fabric8labs.com/wp-json/wp-abilities/v1/abilities
+    status: 401
+  - url: https://www.fabric8labs.com/.well-known/oauth-protected-resource
+    status: 200

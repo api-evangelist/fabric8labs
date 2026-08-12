@@ -1,0 +1,200 @@
+generated: '2026-08-12'
+method: derived
+source: >-
+  openapi/ components.schemas, themselves normalised from the per-route OPTIONS schema documents
+  served by www.fabric8labs.com, plus the registered post types and taxonomies read from
+  /wp/v2/types and /wp/v2/taxonomies. No object reference page exists to enrich this from — the
+  company publishes no documentation.
+note: >-
+  This is the WordPress content model as Fabric8Labs has configured it. The one company-specific
+  extension is the "team" custom post type registered by the site theme, and the ACF (Advanced
+  Custom Fields) block that appears on Post, Page, Attachment, Category and Team records. Identifiers
+  are unprefixed integers throughout — there is no typed id scheme — so an id is only meaningful
+  together with its collection.
+id_scheme:
+  style: integer
+  prefixed: false
+  note: Every entity keys on a bare auto-increment integer. Cross-collection id collisions are
+    expected and are not an error; resolve ids against the collection they came from.
+entities:
+- name: Post
+  collection: /wp/v2/posts
+  schema: openapi/fabric8labs-posts-api-openapi.yml#/components/schemas/Post
+  fields: 28
+  records: 13
+  description: Newsroom items, press releases and technical showcase articles.
+  relationships:
+  - type: has_many
+    target: Category
+    via: categories
+    detail: Array of category term ids.
+  - type: has_many
+    target: Tag
+    via: tags
+    detail: Array of post_tag term ids. The tag vocabulary is empty on this site (0 terms).
+  - type: has_one
+    target: Attachment
+    via: featured_media
+    detail: Attachment id, 0 when unset.
+  - type: belongs_to
+    target: User
+    via: author
+    detail: User id. The users collection is not anonymously readable (401), so the author id cannot
+      be resolved to a record without credentials. This is the one dangling reference in the model.
+- name: Page
+  collection: /wp/v2/pages
+  schema: openapi/fabric8labs-pages-api-openapi.yml#/components/schemas/Page
+  fields: 26
+  records: 27
+  description: Marketing, market, technology and manufacturing pages.
+  relationships:
+  - type: belongs_to
+    target: Page
+    via: parent
+    detail: Self-referential hierarchy; 0 at the root.
+  - type: has_one
+    target: Attachment
+    via: featured_media
+  - type: belongs_to
+    target: User
+    via: author
+- name: Team
+  collection: /wp/v2/team
+  schema: openapi/fabric8labs-team-api-openapi.yml#/components/schemas/Team
+  fields: 20
+  records: 3
+  description: >-
+    Custom post type registered by the fabric8labs theme. A leadership directory. This is the only
+    entity in the model that is specific to Fabric8Labs rather than WordPress default furniture.
+  relationships:
+  - type: has_one
+    target: Attachment
+    via: featured_media
+    detail: Headshot.
+  note: Carries no author field, unlike Post and Page.
+- name: Attachment
+  collection: /wp/v2/media
+  schema: openapi/fabric8labs-media-api-openapi.yml#/components/schemas/Attachment
+  fields: 33
+  records: 276
+  description: Media library — product imagery, cold-plate and printhead diagrams, press assets,
+    partner logos.
+  relationships:
+  - type: belongs_to
+    target: Post
+    via: post
+    detail: The post or page the attachment was uploaded to; may be null.
+  - type: belongs_to
+    target: User
+    via: author
+  key_fields:
+  - source_url
+  - mime_type
+  - media_type
+  - media_details
+  - filesize
+  - alt_text
+- name: Category
+  collection: /wp/v2/categories
+  schema: openapi/fabric8labs-taxonomy-api-openapi.yml#/components/schemas/Category
+  fields: 10
+  records: 6
+  description: Content categories including Case Study, News and Press Release.
+  relationships:
+  - type: belongs_to
+    target: Category
+    via: parent
+    detail: Hierarchical taxonomy; 0 at the root.
+  - type: has_many
+    target: Post
+    via: count
+    detail: count is a denormalised tally rather than a link; traverse by filtering
+      /wp/v2/posts?categories={id}.
+- name: Tag
+  collection: /wp/v2/tags
+  schema: openapi/fabric8labs-taxonomy-api-openapi.yml#/components/schemas/Tag
+  fields: 8
+  records: 0
+  description: Flat post_tag taxonomy. Registered and readable but entirely unpopulated — the
+    company does not tag its content.
+  relationships:
+  - type: has_many
+    target: Post
+    via: count
+- name: SearchResult
+  collection: /wp/v2/search
+  schema: openapi/fabric8labs-search-api-openapi.yml#/components/schemas/SearchResult
+  fields: 5
+  records: 28
+  description: A thin projection over every public post type — id, title, url, type, subtype. The
+    fastest way to enumerate the whole public content set in one call.
+  relationships:
+  - type: has_one
+    target: Post
+    via: id
+    detail: Resolve id against the collection named by subtype (post, page or team).
+- name: Type
+  collection: /wp/v2/types
+  schema: openapi/fabric8labs-discovery-api-openapi.yml#/components/schemas/Type
+  description: Registered post type descriptors. Self-describing metadata, not content.
+  relationships:
+  - type: has_many
+    target: Taxonomy
+    via: taxonomies
+- name: Taxonomy
+  collection: /wp/v2/taxonomies
+  schema: openapi/fabric8labs-discovery-api-openapi.yml#/components/schemas/Taxonomy
+  description: Registered taxonomy descriptors.
+  relationships:
+  - type: has_many
+    target: Type
+    via: types
+- name: Status
+  collection: /wp/v2/statuses
+  schema: openapi/fabric8labs-discovery-api-openapi.yml#/components/schemas/Status
+  description: Post status descriptors (publish, future, draft, pending, private).
+- name: User
+  collection: /wp/v2/users
+  readable: false
+  status: 401
+  description: >-
+    Referenced by Post.author, Page.author and Attachment.author but not anonymously readable. Named
+    here so the dangling reference is explicit rather than silently missing from the graph.
+common_field_groups:
+  rendered_object:
+    fields:
+    - title
+    - content
+    - excerpt
+    - guid
+    shape: '{ "rendered": "<html>" }'
+    detail: These fields are objects with a rendered string, not plain strings. A consumer that
+      treats title as a string will break.
+  timestamps:
+    fields:
+    - date
+    - date_gmt
+    - modified
+    - modified_gmt
+    format: ISO 8601, site timezone America/Los_Angeles for the non-GMT pair.
+  acf:
+    present_on:
+    - Post
+    - Page
+    - Attachment
+    - Category
+    - Team
+    detail: Advanced Custom Fields payload. Shape is site-defined and not described in the OPTIONS
+      schema beyond "object", so its contents cannot be modelled without reading live records.
+  links:
+    field: _links
+    detail: HAL-like navigation present on every record. See conventions/fabric8labs-conventions.yml.
+summary:
+  entities: 11
+  readable_entities: 10
+  relationships: 14
+  company_specific_entities: 1
+render: null
+x-evidence:
+  fetched: '2026-08-12'
+  host: www.fabric8labs.com

@@ -1,23 +1,294 @@
 aid: fabric8labs
 name: Fabric8Labs
-description: 'Fabric8Labs is a company surfaced via the API Evangelist harvest backlog (source: secondary-market)
-  and added to the network as a stub for full-pipeline profiling.'
+description: 'Fabric8Labs is a San Diego, California based advanced-manufacturing company founded
+  in 2015 that invented and commercialized Electrochemical Additive Manufacturing (ECAM), a
+  room-temperature metal 3D printing process that uses a patented microelectrode array printhead to
+  electroplate copper ions out of a water-based metal-salt solution pixel by pixel. Unlike
+  powder-bed and laser metal additive methods, ECAM needs no high-temperature step, no expensive
+  metal powder feedstock and effectively no post-processing, prints at micron-scale resolution
+  directly onto temperature-sensitive substrates, and the company reports more than a 90% reduction
+  in greenhouse gas emissions against alternative additive and traditional manufacturing routes.
+  Fabric8Labs operates as both a technology developer and a production foundry, manufacturing
+  high-precision components for data-center liquid cooling and AI/HPC thermal management (cold
+  plates, single-phase, two-phase and immersion cooling), RF and wireless communications, satellite
+  and aerospace systems, power electronics, photonics cooling, semiconductors, medical devices and
+  luxury goods. It has raised funding from Intel Capital, TDK Ventures and others, including a $50M
+  round announced in November 2025 to expand United States manufacturing capacity toward tens of
+  millions of components annually, and on 10 June 2026 announced it will be acquired by TDK
+  Corporation — the company continues under existing leadership, with ECAM folded into TDK''s global
+  manufacturing network. Fabric8Labs publishes no product, customer or developer API and
+  runs no developer program; the only machine-readable surface on fabric8labs.com is the public
+  WordPress REST API (namespace wp/v2) that serves the company newsroom, site pages, leadership
+  team directory, taxonomy and media library as JSON, alongside a WordPress MCP Adapter endpoint and
+  RFC 8414/RFC 9728 OAuth discovery documents that are served but authentication-gated.'
 url: https://raw.githubusercontent.com/api-evangelist/fabric8labs/refs/heads/main/apis.yml
 x-type: company
 x-source: harvest:secondary-market
-x-tier: stub
-x-tier-reason: harvest
+x-tier: profiled
+x-tier-reason: enrichment-pipeline
+image: https://www.fabric8labs.com/wp-content/uploads/2024/06/logo-background.png
 specificationVersion: '0.20'
 created: '2026-08-12'
 modified: '2026-08-12'
 tags:
 - Company
-apis: []
+- Advanced Manufacturing
+- Additive Manufacturing
+- 3D Printing
+- Metal 3D Printing
+- Electrochemical Additive Manufacturing
+- Thermal Management
+- Liquid Cooling
+- Data Centers
+- Semiconductors
+- Electronics
+- Aerospace
+- Photonics
+- Power Electronics
+- Hardware
+- Content
+apis:
+- aid: fabric8labs:mcp
+  name: Fabric8Labs MCP Server (WordPress MCP Adapter)
+  description: >-
+    A Model Context Protocol server endpoint registered on www.fabric8labs.com under the WordPress
+    REST "mcp" namespace and served at /wp-json/mcp/mcp-oauth-server (with a sibling
+    /wp-json/mcp/mcp-adapter-default-server). The endpoint is live and advertises itself correctly
+    via RFC 9728 protected-resource metadata and RFC 8414 authorization-server metadata at the
+    fabric8labs.com well-known paths, but it is authentication-gated: an anonymous JSON-RPC
+    tools/list returns HTTP 401 mcp_unauthorized with a WWW-Authenticate Bearer challenge, so the
+    published tool set and its input schemas could not be enumerated. This is WordPress MCP Adapter
+    infrastructure over site content, not a Fabric8Labs product API.
+  humanURL: https://www.fabric8labs.com/wp-json/mcp
+  baseURL: https://www.fabric8labs.com/wp-json/mcp/mcp-oauth-server
+  tags:
+  - MCP
+  - Agents
+  properties:
+  - type: MCPServer
+    url: mcp/fabric8labs-mcp.yml
+  - type: ToolCrosswalk
+    url: mcp/fabric8labs-tool-crosswalk.yml
+- aid: fabric8labs:fabric8labs-posts-api
+  name: Fabric8Labs Posts API
+  description: The Posts API from Fabric8Labs — 2 anonymous read operations over the 13 published
+    newsroom and technical-showcase posts on www.fabric8labs.com.
+  humanURL: https://www.fabric8labs.com/press/
+  baseURL: https://www.fabric8labs.com/wp-json
+  tags:
+  - Posts
+  properties:
+  - type: OpenAPI
+    url: openapi/fabric8labs-posts-api-openapi.yml
+  - type: DataModel
+    url: data-model/fabric8labs-data-model.yml
+  - type: ErrorCatalog
+    url: errors/fabric8labs-problem-types.yml
+  - type: Examples
+    url: examples/fabric8labs-examples.yml
+- aid: fabric8labs:fabric8labs-pages-api
+  name: Fabric8Labs Pages API
+  description: The Pages API from Fabric8Labs — 2 anonymous read operations over the 27 published
+    marketing, market and technology pages on www.fabric8labs.com.
+  humanURL: https://www.fabric8labs.com/site-map/
+  baseURL: https://www.fabric8labs.com/wp-json
+  tags:
+  - Pages
+  properties:
+  - type: OpenAPI
+    url: openapi/fabric8labs-pages-api-openapi.yml
+  - type: DataModel
+    url: data-model/fabric8labs-data-model.yml
+  - type: ErrorCatalog
+    url: errors/fabric8labs-problem-types.yml
+  - type: Examples
+    url: examples/fabric8labs-examples.yml
+- aid: fabric8labs:fabric8labs-media-api
+  name: Fabric8Labs Media API
+  description: The Media API from Fabric8Labs — 2 anonymous read operations over the 276 media
+    library attachments (product imagery, press assets, diagrams) on www.fabric8labs.com.
+  humanURL: https://www.fabric8labs.com/technology/
+  baseURL: https://www.fabric8labs.com/wp-json
+  tags:
+  - Media
+  properties:
+  - type: OpenAPI
+    url: openapi/fabric8labs-media-api-openapi.yml
+  - type: DataModel
+    url: data-model/fabric8labs-data-model.yml
+  - type: ErrorCatalog
+    url: errors/fabric8labs-problem-types.yml
+  - type: Examples
+    url: examples/fabric8labs-examples.yml
+- aid: fabric8labs:fabric8labs-team-api
+  name: Fabric8Labs Team API
+  description: The Team API from Fabric8Labs — 2 anonymous read operations over the "team" custom
+    post type, a 3-record leadership directory registered by the fabric8labs WordPress theme.
+  humanURL: https://www.fabric8labs.com/about/
+  baseURL: https://www.fabric8labs.com/wp-json
+  tags:
+  - Team
+  properties:
+  - type: OpenAPI
+    url: openapi/fabric8labs-team-api-openapi.yml
+  - type: DataModel
+    url: data-model/fabric8labs-data-model.yml
+  - type: ErrorCatalog
+    url: errors/fabric8labs-problem-types.yml
+  - type: Examples
+    url: examples/fabric8labs-examples.yml
+- aid: fabric8labs:fabric8labs-taxonomy-api
+  name: Fabric8Labs Taxonomy API
+  description: The Taxonomy API from Fabric8Labs — 4 anonymous read operations over the 6 content
+    categories (News, Insights, Case Study, Guide, White Paper, Uncategorized) and the post_tag
+    vocabulary, which is registered but holds zero terms.
+  humanURL: https://www.fabric8labs.com/press/
+  baseURL: https://www.fabric8labs.com/wp-json
+  tags:
+  - Taxonomy
+  properties:
+  - type: OpenAPI
+    url: openapi/fabric8labs-taxonomy-api-openapi.yml
+  - type: DataModel
+    url: data-model/fabric8labs-data-model.yml
+  - type: ErrorCatalog
+    url: errors/fabric8labs-problem-types.yml
+  - type: Examples
+    url: examples/fabric8labs-examples.yml
+- aid: fabric8labs:fabric8labs-search-api
+  name: Fabric8Labs Search API
+  description: The Search API from Fabric8Labs — 1 anonymous read operation returning a unified
+    search index across every public post type on www.fabric8labs.com.
+  humanURL: https://www.fabric8labs.com/site-map/
+  baseURL: https://www.fabric8labs.com/wp-json
+  tags:
+  - Search
+  properties:
+  - type: OpenAPI
+    url: openapi/fabric8labs-search-api-openapi.yml
+  - type: DataModel
+    url: data-model/fabric8labs-data-model.yml
+  - type: ErrorCatalog
+    url: errors/fabric8labs-problem-types.yml
+  - type: Examples
+    url: examples/fabric8labs-examples.yml
+- aid: fabric8labs:fabric8labs-discovery-api
+  name: Fabric8Labs Discovery API
+  description: The Discovery API from Fabric8Labs — 6 anonymous read operations describing the
+    registered post types, taxonomies and post statuses that define the rest of the surface.
+  humanURL: https://www.fabric8labs.com/wp-json/wp/v2
+  baseURL: https://www.fabric8labs.com/wp-json
+  tags:
+  - Discovery
+  properties:
+  - type: OpenAPI
+    url: openapi/fabric8labs-discovery-api-openapi.yml
+  - type: DataModel
+    url: data-model/fabric8labs-data-model.yml
+  - type: ErrorCatalog
+    url: errors/fabric8labs-problem-types.yml
+  - type: Examples
+    url: examples/fabric8labs-examples.yml
+x-enrichment:
+  date: '2026-08-12'
+  status: enriched
+  artifacts_added: 37
+  pass: local-v1
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: AgenticAccess
+  url: agentic-access/fabric8labs-agentic-access.yml
+- type: DomainSecurity
+  url: security/fabric8labs-domain-security.yml
+- type: OpenAPI
+  name: Fabric8Labs public WordPress REST surface (7 documents, 19 operations)
+  url: openapi/
+- type: LLMsTxt
+  url: llms/fabric8labs-llms.txt
+- type: WellKnown
+  url: well-known/fabric8labs-well-known.yml
+- type: Authentication
+  url: authentication/fabric8labs-authentication.yml
+- type: OAuthScopes
+  url: scopes/fabric8labs-scopes.yml
+- type: Conventions
+  url: conventions/fabric8labs-conventions.yml
+- type: Conformance
+  url: conformance/fabric8labs-conformance.yml
+- type: Lifecycle
+  url: lifecycle/fabric8labs-lifecycle.yml
+- type: DataModel
+  url: data-model/fabric8labs-data-model.yml
+- type: ErrorCatalog
+  url: errors/fabric8labs-problem-types.yml
+- type: Examples
+  url: examples/fabric8labs-examples.yml
+- type: Packages
+  url: packages/fabric8labs-packages.yml
+- type: Plans
+  url: plans/fabric8labs-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/fabric8labs-rate-limits.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: Overlay
+  name: Posts API overlay
+  url: overlays/fabric8labs-posts-api-overlay.yaml
+- type: Overlay
+  name: Pages API overlay
+  url: overlays/fabric8labs-pages-api-overlay.yaml
+- type: Overlay
+  name: Media API overlay
+  url: overlays/fabric8labs-media-api-overlay.yaml
+- type: Overlay
+  name: Team API overlay
+  url: overlays/fabric8labs-team-api-overlay.yaml
+- type: Overlay
+  name: Taxonomy API overlay
+  url: overlays/fabric8labs-taxonomy-api-overlay.yaml
+- type: Overlay
+  name: Search API overlay
+  url: overlays/fabric8labs-search-api-overlay.yaml
+- type: Overlay
+  name: Discovery API overlay
+  url: overlays/fabric8labs-discovery-api-overlay.yaml
 - type: Website
+  url: https://www.fabric8labs.com/
+- type: About
+  url: https://www.fabric8labs.com/about/
+- type: Technology
+  url: https://www.fabric8labs.com/technology/
+- type: Manufacturing
+  url: https://www.fabric8labs.com/manufacturing/
+- type: Markets
+  url: https://www.fabric8labs.com/markets/
+- type: Industries
+  url: https://www.fabric8labs.com/industries/
+- type: Blog
+  url: https://www.fabric8labs.com/press/
+- type: BlogRSS
+  url: https://www.fabric8labs.com/feed/
+- type: Press
+  url: https://www.fabric8labs.com/press/
+- type: Events
+  url: https://www.fabric8labs.com/events/
+- type: Support
+  url: https://www.fabric8labs.com/contact-us/
+- type: Contact
+  url: https://www.fabric8labs.com/contact-us/
+- type: PrivacyPolicy
+  url: https://www.fabric8labs.com/privacy-policy/
+- type: Accessibility
+  url: https://www.fabric8labs.com/web-accessibility/
+- type: SiteMap
+  url: https://www.fabric8labs.com/site-map/
+- type: GitHubOrganization
+  url: https://github.com/Fabric8Labs
+- type: LinkedIn
+  url: https://www.linkedin.com/company/fabric8labs
+- type: SecondaryMarket
   url: https://forgeglobal.com/fabric8labs_stock/

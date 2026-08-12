@@ -1,0 +1,82 @@
+generated: '2026-08-12'
+method: searched
+source: >-
+  Unauthenticated registry-metadata searches against npm, PyPI, RubyGems, crates.io, Maven Central,
+  NuGet and pkg.go.dev, plus an inspection of every public repository in the github.com/Fabric8Labs
+  organization. Fabric8Labs publishes no SDK, no client library and no CLI on any registry.
+package_count: 0
+official_package_count: 0
+packages: []
+note: >-
+  An honest zero, and the expected one: Fabric8Labs sells manufactured metal components, has no API
+  product and runs no developer program, so there is nothing for a client library to wrap. No SDKs
+  pointer is emitted in apis.yml.
+registries_searched:
+- registry: npm
+  query: https://registry.npmjs.org/-/v1/search?text=fabric8labs
+  status: 200
+  results: 0
+- registry: pypi
+  query: https://pypi.org/pypi/fabric8labs/json
+  status: 404
+  results: 0
+- registry: rubygems
+  query: https://rubygems.org/api/v1/gems/fabric8labs.json
+  status: 404
+  results: 0
+- registry: crates.io
+  query: https://crates.io/api/v1/crates?q=fabric8labs
+  status: 200
+  results: 0
+- registry: maven-central
+  results: 0
+- registry: nuget
+  results: 0
+- registry: pkg.go.dev
+  results: 0
+near_misses:
+- name: python-sqlite-log-handler
+  registry: pypi
+  version: 1.1.0
+  published: '2026-03-30'
+  url: https://pypi.org/project/python-sqlite-log-handler/
+  official: false
+  rejected: true
+  reason: >-
+    github.com/Fabric8Labs/python_sqlite_log_handler is a FORK, not a Fabric8Labs project. The PyPI
+    package metadata names Roger Vilà (rogervila@me.com) as author and points home_page and both
+    project_urls at github.com/rogervila/python_sqlite_log_handler. Fabric8Labs has published no
+    release of it and does not own the distribution. Recorded here so a future run does not re-derive
+    it as a first-party SDK from the presence of the fork in their org.
+- name: fabric8
+  registry: multiple
+  official: false
+  rejected: true
+  reason: >-
+    The "fabric8" name across npm, Maven Central and Docker belongs to the Red Hat / JBoss fabric8
+    Kubernetes tooling project (fabric8.io) — an entirely unrelated organization that predates this
+    company. Name collision only.
+github_organization:
+  url: https://github.com/Fabric8Labs
+  public_repos: 2
+  repositories:
+  - name: Blasius
+    description: 'CFD Repo - Code for HyperMesh CFD that allows us to move faster in the
+      Pre-Processing & Post-Processing. In memory of Dr. G'
+    language: Python
+    last_push: '2026-07-22'
+    published_to_registry: false
+    note: Internal computational-fluid-dynamics tooling for HyperMesh, consistent with the company's
+      cold-plate and liquid-cooling work. Not a client library and not distributed.
+  - name: python_sqlite_log_handler
+    language: Python
+    last_push: '2026-03-27'
+    published_to_registry: false
+    note: Fork of a third-party logging utility. See near_misses.
+  ownership_evidence: >-
+    The org carries no name, description or website in its GitHub profile, so ownership was
+    established from repository content instead: Blasius is HyperMesh CFD pre/post-processing code,
+    which matches Fabric8Labs' published thermal-management and cold-plate engineering domain and no
+    other plausible owner of the "Fabric8Labs" handle.
+x-evidence:
+  fetched: '2026-08-12'

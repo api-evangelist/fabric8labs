@@ -1,0 +1,456 @@
+openapi: 3.1.0
+info:
+  title: Fabric8Labs Taxonomy API
+  version: wp/v2
+  description: Read-only view of the public WordPress REST API (namespace wp/v2) served by www.fabric8labs.com.
+    Derived by API Evangelist from the live, anonymous route index at https://www.fabric8labs.com/wp-json
+    and the per-route OPTIONS schema documents the site serves. Only operations verified to answer anonymously
+    with HTTP 200 are included; the write methods WordPress also registers on these routes require authentication
+    and are not part of this public surface.
+  contact:
+    name: Fabric8Labs
+    url: https://www.fabric8labs.com/contact-us/
+servers:
+- url: https://www.fabric8labs.com/wp-json
+tags:
+- name: Taxonomy
+  description: Taxonomy resources on www.fabric8labs.com.
+paths:
+  /wp/v2/categories:
+    get:
+      operationId: listCategories
+      summary: List categories
+      description: Returns a paginated collection of categories published on www.fabric8labs.com.
+      tags:
+      - Taxonomy
+      parameters:
+      - name: context
+        in: query
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+        description: Scope under which the request is made; determines fields present in response.
+      - name: exclude
+        in: query
+        schema:
+          type: array
+          items:
+            type: integer
+          default: []
+        description: Ensure result set excludes specific IDs.
+      - name: hide_empty
+        in: query
+        schema:
+          type: boolean
+          default: false
+        description: Whether to hide terms not assigned to any posts.
+      - name: include
+        in: query
+        schema:
+          type: array
+          items:
+            type: integer
+          default: []
+        description: Limit result set to specific IDs.
+      - name: order
+        in: query
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+          default: asc
+        description: Order sort attribute ascending or descending.
+      - name: orderby
+        in: query
+        schema:
+          type: string
+          enum:
+          - id
+          - include
+          - name
+          - slug
+          - include_slugs
+          - term_group
+          - description
+          - count
+          default: name
+        description: Sort collection by term attribute.
+      - name: page
+        in: query
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+        description: Current page of the collection.
+      - name: parent
+        in: query
+        schema:
+          type: integer
+        description: Limit result set to terms assigned to a specific parent.
+      - name: per_page
+        in: query
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 10
+        description: Maximum number of items to be returned in result set.
+      - name: post
+        in: query
+        schema:
+          type: integer
+        description: Limit result set to terms assigned to a specific post.
+      - name: search
+        in: query
+        schema:
+          type: string
+        description: Limit results to those matching a string.
+      - name: slug
+        in: query
+        schema:
+          type: array
+          items:
+            type: string
+        description: Limit result set to terms with one or more specific slugs.
+      responses:
+        '200':
+          description: A list of categories.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Category'
+          headers:
+            X-WP-Total:
+              description: Total number of matching records.
+              schema:
+                type: integer
+            X-WP-TotalPages:
+              description: Total number of pages available.
+              schema:
+                type: integer
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /wp/v2/categories/{id}:
+    get:
+      operationId: getCategoriesById
+      summary: Retrieve a single categorie
+      description: Returns one record from the categories collection on www.fabric8labs.com.
+      tags:
+      - Taxonomy
+      parameters:
+      - name: id
+        in: path
+        schema:
+          type: integer
+        description: Unique identifier for the term.
+        required: true
+      - name: context
+        in: query
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+        description: Scope under which the request is made; determines fields present in response.
+      responses:
+        '200':
+          description: A single categorie.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /wp/v2/tags:
+    get:
+      operationId: listTags
+      summary: List tags
+      description: Returns a paginated collection of tags published on www.fabric8labs.com.
+      tags:
+      - Taxonomy
+      parameters:
+      - name: context
+        in: query
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+        description: Scope under which the request is made; determines fields present in response.
+      - name: exclude
+        in: query
+        schema:
+          type: array
+          items:
+            type: integer
+          default: []
+        description: Ensure result set excludes specific IDs.
+      - name: hide_empty
+        in: query
+        schema:
+          type: boolean
+          default: false
+        description: Whether to hide terms not assigned to any posts.
+      - name: include
+        in: query
+        schema:
+          type: array
+          items:
+            type: integer
+          default: []
+        description: Limit result set to specific IDs.
+      - name: offset
+        in: query
+        schema:
+          type: integer
+        description: Offset the result set by a specific number of items.
+      - name: order
+        in: query
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+          default: asc
+        description: Order sort attribute ascending or descending.
+      - name: orderby
+        in: query
+        schema:
+          type: string
+          enum:
+          - id
+          - include
+          - name
+          - slug
+          - include_slugs
+          - term_group
+          - description
+          - count
+          default: name
+        description: Sort collection by term attribute.
+      - name: page
+        in: query
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+        description: Current page of the collection.
+      - name: per_page
+        in: query
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 10
+        description: Maximum number of items to be returned in result set.
+      - name: post
+        in: query
+        schema:
+          type: integer
+        description: Limit result set to terms assigned to a specific post.
+      - name: search
+        in: query
+        schema:
+          type: string
+        description: Limit results to those matching a string.
+      - name: slug
+        in: query
+        schema:
+          type: array
+          items:
+            type: string
+        description: Limit result set to terms with one or more specific slugs.
+      responses:
+        '200':
+          description: A list of tags.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Tag'
+          headers:
+            X-WP-Total:
+              description: Total number of matching records.
+              schema:
+                type: integer
+            X-WP-TotalPages:
+              description: Total number of pages available.
+              schema:
+                type: integer
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /wp/v2/tags/{id}:
+    get:
+      operationId: getTagsById
+      summary: Retrieve a single tag
+      description: Returns one record from the tags collection on www.fabric8labs.com.
+      tags:
+      - Taxonomy
+      parameters:
+      - name: id
+        in: path
+        schema:
+          type: integer
+        description: Unique identifier for the term.
+        required: true
+      - name: context
+        in: query
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+        description: Scope under which the request is made; determines fields present in response.
+      responses:
+        '200':
+          description: A single tag.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tag'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  schemas:
+    Category:
+      title: category
+      type: object
+      properties:
+        id:
+          description: Unique identifier for the term.
+          type: integer
+        count:
+          description: Number of published posts for the term.
+          type: integer
+        description:
+          description: HTML description of the term.
+          type: string
+        link:
+          description: URL of the term.
+          type: string
+          format: uri
+        name:
+          description: HTML title for the term.
+          type: string
+        slug:
+          description: An alphanumeric identifier for the term unique to its type.
+          type: string
+        taxonomy:
+          description: Type attribution for the term.
+          type: string
+          enum:
+          - category
+        parent:
+          description: The parent term ID.
+          type: integer
+        meta:
+          description: Meta fields.
+          type: object
+          properties: []
+        acf:
+          description: ACF field data
+          type: object
+          properties: []
+    Tag:
+      title: tag
+      type: object
+      properties:
+        id:
+          description: Unique identifier for the term.
+          type: integer
+        count:
+          description: Number of published posts for the term.
+          type: integer
+        description:
+          description: HTML description of the term.
+          type: string
+        link:
+          description: URL of the term.
+          type: string
+          format: uri
+        name:
+          description: HTML title for the term.
+          type: string
+        slug:
+          description: An alphanumeric identifier for the term unique to its type.
+          type: string
+        taxonomy:
+          description: Type attribution for the term.
+          type: string
+          enum:
+          - post_tag
+        meta:
+          description: Meta fields.
+          type: object
+          properties: []
+    Error:
+      type: object
+      description: The WordPress REST API error envelope returned by www.fabric8labs.com.
+      properties:
+        code:
+          type: string
+          description: Machine-readable error code, e.g. rest_post_invalid_id.
+        message:
+          type: string
+          description: Human-readable error message.
+        data:
+          type: object
+          properties:
+            status:
+              type: integer
+              description: HTTP status code.
+            params:
+              type: object
+              description: Per-parameter validation messages, when present.
+      required:
+      - code
+      - message
+  responses:
+    BadRequest:
+      description: Invalid parameter.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Authentication required or insufficient permission.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: No record matches the request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'

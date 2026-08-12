@@ -1,0 +1,173 @@
+generated: '2026-08-12'
+method: derived
+source: >-
+  openapi/ (built from the live route index and per-route OPTIONS schemas) plus observed live
+  responses from https://www.fabric8labs.com/wp-json. Fabric8Labs publishes no API documentation, so
+  nothing here is quoted from the provider — every convention below was read off the wire.
+authentication:
+  style: none
+  detail: >-
+    The public wp/v2 read surface takes no credential. The gated half (users, settings, abilities,
+    Gravity Forms, MCP) uses WordPress application passwords over HTTP Basic, or OAuth 2.1 for the
+    MCP endpoint. See authentication/fabric8labs-authentication.yml.
+idempotency:
+  supported: false
+  header: null
+  detail: >-
+    There is no idempotency key of any kind on this surface — no Idempotency-Key header, no request
+    token, no dedupe window. The anonymous surface is entirely GET, so idempotency is a property of
+    the HTTP method rather than a provider contract. No Idempotency pointer is emitted in apis.yml,
+    because emitting one would assert a contract Fabric8Labs does not offer.
+pagination:
+  style: page-number
+  params:
+  - name: page
+    default: 1
+    description: 1-indexed page of the collection.
+  - name: per_page
+    default: 10
+    minimum: 1
+    maximum: 100
+    description: Records per page. Requesting more than 100 returns 400 rest_invalid_param.
+  - name: offset
+    description: Alternative absolute offset, accepted on post-type collections.
+  response_headers:
+  - name: X-WP-Total
+    description: Total matching records. Observed value 13 on /wp/v2/posts, 27 on /wp/v2/pages, 276
+      on /wp/v2/media, 3 on /wp/v2/team, 6 on /wp/v2/categories, 28 on /wp/v2/search.
+  - name: X-WP-TotalPages
+    description: Total pages at the requested per_page.
+  link_header:
+    supported: true
+    spec: RFC 5988
+    detail: 'Link: <...?per_page=2&page=2>; rel="next" observed on /wp/v2/posts. rel="prev" is
+      emitted on pages after the first.'
+  cors:
+    access_control_expose_headers: X-WP-Total, X-WP-TotalPages, Link
+    detail: The pagination headers are explicitly CORS-exposed, so a browser client can read them.
+field_selection:
+  supported: true
+  params:
+  - name: _fields
+    description: Comma-separated allowlist of top-level response fields. WordPress core parameter,
+      accepted on every route here.
+  - name: context
+    values:
+    - view
+    - embed
+    - edit
+    default: view
+    description: >-
+      Response shape selector rather than a field list. "embed" returns a reduced record; "edit"
+      requires authentication and returns 401 anonymously. This is the closest thing to sparse
+      fieldsets on the surface.
+  - name: _embed
+    description: Inlines linked resources (author, featured media, terms) under _embedded.
+filtering_and_sorting:
+  filter_params:
+  - search
+  - after
+  - before
+  - modified_after
+  - modified_before
+  - include
+  - exclude
+  - slug
+  - status
+  - categories
+  - categories_exclude
+  - tags
+  - tags_exclude
+  - author
+  - author_exclude
+  - parent
+  - parent_exclude
+  order:
+    param: order
+    values:
+    - asc
+    - desc
+    default: desc
+  orderby:
+    param: orderby
+    values:
+    - author
+    - date
+    - id
+    - include
+    - modified
+    - parent
+    - relevance
+    - slug
+    - include_slugs
+    - title
+    default: date
+hypermedia:
+  supported: true
+  style: WordPress _links / HAL-like
+  detail: >-
+    Every record carries a _links object with self, collection, about, author, replies,
+    wp:attachment, wp:term and curies entries. This is the richest machine-navigable feature of the
+    surface and the reason discovery works without documentation.
+metadata:
+  supported: partial
+  detail: Records expose a meta object, but no custom registered meta fields are visible anonymously
+    on this site.
+request_tracing:
+  request_id_header: null
+  detail: >-
+    No request-id or correlation header is returned. The only per-request identifier is Cloudflare's
+    cf-ray, which is edge infrastructure rather than an application trace ID an agent could quote
+    back to support.
+versioning:
+  scheme: uri-path-namespace
+  current: wp/v2
+  detail: >-
+    Version lives in the URL namespace segment (/wp-json/wp/v2). It is WordPress core's version, not
+    a Fabric8Labs product version — the company neither sets nor announces it. Twenty-two namespaces
+    are registered on the host; only wp/v2, mcp and wp-abilities/v1 are relevant.
+  see: lifecycle/fabric8labs-lifecycle.yml
+error_envelope:
+  format: wordpress-rest
+  rfc9457: false
+  content_type: application/json
+  shape:
+    code: Machine-readable string, e.g. rest_invalid_param, rest_post_invalid_id, rest_forbidden.
+    message: Human-readable sentence.
+    data.status: HTTP status, repeated inside the body.
+    data.params: Per-parameter validation messages on 400.
+    data.details: Per-parameter nested error objects on 400.
+  example_400: '{"code":"rest_invalid_param","message":"Invalid parameter(s): per_page","data":{"status":400,"params":{"per_page":"per_page
+    must be between 1 (inclusive) and 100 (inclusive)"}}}'
+  example_404: '{"code":"rest_post_invalid_id","message":"Invalid post ID.","data":{"status":404}}'
+  see: errors/fabric8labs-problem-types.yml
+rate_limiting:
+  documented: false
+  runtime_signal: none
+  detail: >-
+    No X-RateLimit-*, no RateLimit-*, no Retry-After on any observed response, and no published
+    limit. The site sits behind Cloudflare and WP Engine, so an undisclosed edge limit almost
+    certainly exists, but nothing signals it to a client. robots.txt sets Crawl-delay: 10, which is
+    the only throttling hint the host publishes anywhere.
+  see: rate-limits/fabric8labs-rate-limits.yml
+caching:
+  cache_control: max-age=600, must-revalidate
+  last_modified: true
+  etag: false
+  conditional_requests: If-Modified-Since honoured via Last-Modified; no ETag is emitted.
+  edge: Cloudflare (cf-cache-status observed) in front of WP Engine.
+transport:
+  https_only: true
+  tls: TLSv1.3
+  hsts: true
+  hsts_max_age: 63072000
+  see: security/fabric8labs-domain-security.yml
+cross_links:
+  authentication: authentication/fabric8labs-authentication.yml
+  errors: errors/fabric8labs-problem-types.yml
+  lifecycle: lifecycle/fabric8labs-lifecycle.yml
+  rate_limits: rate-limits/fabric8labs-rate-limits.yml
+  data_model: data-model/fabric8labs-data-model.yml
+x-evidence:
+  fetched: '2026-08-12'
+  host: www.fabric8labs.com

@@ -1,0 +1,65 @@
+generated: '2026-08-12'
+method: probed
+source: >-
+  Live probes of www.fabric8labs.com and the wp-json route index. Fabric8Labs publishes no
+  versioning policy, no deprecation policy, no SLA and no status page — searched and not found, not
+  merely unchecked. The company runs no developer program, so none of these instruments exist for it
+  to publish.
+versioning:
+  scheme: uri-path-namespace
+  current: wp/v2
+  docs: null
+  policy_published: false
+  note: >-
+    The version segment is WordPress core's REST namespace, not a Fabric8Labs product version.
+    Fabric8Labs neither controls its cadence nor announces its changes; a WordPress core upgrade on
+    the site can move the surface without any notice to consumers. That is the honest lifecycle risk
+    of depending on this API.
+deprecation:
+  policy_url: null
+  policy_published: false
+  sunset_header: false
+  deprecation_header: false
+  note: >-
+    No RFC 8594 Sunset or Deprecation header was observed on any response. No deprecation policy
+    page exists. No StatusPage or Deprecation pointer is emitted in apis.yml, because neither
+    surface exists to point at.
+sla:
+  url: null
+  uptime_target: null
+  published: false
+status_page:
+  url: null
+  published: false
+  probed:
+  - url: https://status.fabric8labs.com/
+    status: NXDOMAIN
+  - url: https://www.fabric8labs.com/status/
+    status: 404
+support:
+  channel: https://www.fabric8labs.com/contact-us/
+  type: contact-form
+  note: A web form is the only intake path. No email address, developer support queue, community
+    forum or issue tracker is published.
+changelog:
+  published: false
+  note: >-
+    https://www.fabric8labs.com/press/ is a newsroom of 13 corporate posts, not a dated API or
+    product changelog. It is wired as Blog, not as ChangeLog, because treating a press page as a
+    changelog would credit Fabric8Labs with release discipline it does not practise.
+deprecated_operations: []
+content_freshness:
+  posts_total: 13
+  most_recent_post: '2026-06-15'
+  pages_total: 27
+  media_total: 276
+  note: Read from X-WP-Total headers and the posts collection on 2026-08-12.
+x-evidence:
+  fetched: '2026-08-12'
+  urls:
+  - url: https://www.fabric8labs.com/press/
+    status: 200
+  - url: https://www.fabric8labs.com/contact-us/
+    status: 200
+  - url: https://www.fabric8labs.com/wp-json/wp/v2/posts?per_page=1
+    status: 200

@@ -1,0 +1,41 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for Fabric8Labs Media API
+  version: 1.0.0
+extends: openapi/fabric8labs-media-api-openapi.yml
+x-generated: '2026-08-12'
+x-method: generated
+x-source: Enhancements applied by the API Evangelist enrichment pipeline on top of the spec derived from
+  the live www.fabric8labs.com route index and OPTIONS schemas.
+actions:
+- target: $.info
+  update:
+    x-apievangelist-provenance: Derived by API Evangelist from the live WordPress REST route index at
+      https://www.fabric8labs.com/wp-json and the per-route OPTIONS schema documents served by the same
+      host. Fabric8Labs publishes no OpenAPI.
+    x-apievangelist-verified: '2026-08-12'
+    x-api-surface: wordpress-rest
+    x-product-api: false
+    x-provider-published-spec: false
+- target: $.info
+  description: Record that this surface carries no rate-limit signalling and no idempotency contract,
+    so agents plan conservatively.
+  update:
+    x-rate-limit-signalling: none
+    x-idempotency: not-supported
+    x-error-format: wordpress-rest
+    x-crawl-delay-seconds: 10
+- target: $.servers[0]
+  update:
+    description: Public WordPress REST base for www.fabric8labs.com. Anonymous read access; no credential
+      required.
+- target: $.tags[?(@.name=='Media')]
+  update:
+    x-access: anonymous-read
+- target: $.paths.*.get
+  description: Mark every operation as safe, read-only and anonymously reachable, as verified live.
+  update:
+    x-agentic-access:
+      action-class: connected
+      consequence: read
+    x-verified-anonymous: true

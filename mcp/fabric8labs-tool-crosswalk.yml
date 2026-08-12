@@ -1,0 +1,84 @@
+generated: '2026-08-12'
+method: derived
+source: openapi/ + mcp/fabric8labs-mcp.yml + live probes of www.fabric8labs.com
+note: >-
+  Fabric8Labs has both an MCP server and an OpenAPI surface, which is the condition that requires
+  this artifact — but only one side of the crosswalk is readable. The MCP tool list is
+  authentication-gated (tools/list returns 401, and the WordPress Abilities registry that backs it
+  returns 401 as well), so there are no tool names to bind. Every crosswalk[] row is therefore
+  empty by measurement, not by omission. What CAN be stated honestly is the REST side: nineteen
+  anonymous operations exist with no tool known to cover them. This file records the divergence as
+  unmeasurable rather than inventing a mapping, which is the whole point of the artifact.
+surfaces:
+  openapi:
+    path: openapi/
+    documents: 7
+    operations: 19
+    gated: false
+    note: All nineteen operations verified to answer anonymously with HTTP 200.
+  mcp:
+    url: https://www.fabric8labs.com/wp-json/mcp/mcp-oauth-server
+    gated: true
+    note: tools/list returns HTTP 401 mcp_unauthorized. Tool names and inputSchemas require an
+      OAuth token with scope "mcp".
+  graphql:
+    present: false
+    note: No /graphql surface exists on this host.
+crosswalk: []
+mcp_only: []
+rest_only:
+- capability: Newsroom and posts
+  operations:
+  - listPosts
+  - getPostsById
+  source: openapi/fabric8labs-posts-api-openapi.yml
+- capability: Site pages
+  operations:
+  - listPages
+  - getPagesById
+  source: openapi/fabric8labs-pages-api-openapi.yml
+- capability: Media library
+  operations:
+  - listMedia
+  - getMediaById
+  source: openapi/fabric8labs-media-api-openapi.yml
+- capability: Leadership team directory
+  operations:
+  - listTeam
+  - getTeamById
+  source: openapi/fabric8labs-team-api-openapi.yml
+- capability: Content taxonomy
+  operations:
+  - listCategories
+  - getCategoriesById
+  - listTags
+  - getTagsById
+  source: openapi/fabric8labs-taxonomy-api-openapi.yml
+- capability: Unified site search
+  operations:
+  - listSearch
+  source: openapi/fabric8labs-search-api-openapi.yml
+- capability: Schema discovery
+  operations:
+  - listTypes
+  - getTypesById
+  - listTaxonomies
+  - getTaxonomiesById
+  - listStatuses
+  - getStatusesById
+  source: openapi/fabric8labs-discovery-api-openapi.yml
+coverage:
+  tools_named: 0
+  tools_bound: 0
+  mcp_only: 0
+  rest_operations_total: 19
+  rest_operations_with_tool: 0
+  measurable: false
+  reason: mcp-tools-list-auth-gated
+x-evidence:
+  fetched: '2026-08-12'
+  urls:
+  - url: https://www.fabric8labs.com/wp-json/mcp/mcp-oauth-server
+    status: 401
+  - url: https://www.fabric8labs.com/wp-json/wp-abilities/v1/abilities
+    status: 401

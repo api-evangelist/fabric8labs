@@ -1,0 +1,136 @@
+generated: '2026-08-12'
+method: probed
+source: >-
+  Live anonymous GET requests against https://www.fabric8labs.com/wp-json on 2026-08-12. Every
+  payload below is a verbatim excerpt of a real response — nothing is synthesised. Responses were
+  trimmed with the _fields parameter where the full record was too large to be useful as an example.
+examples:
+- name: List newsroom posts
+  operation: listPosts
+  spec: openapi/fabric8labs-posts-api-openapi.yml
+  request: GET /wp-json/wp/v2/posts?per_page=1&_fields=id,date,slug,link,title,categories,featured_media,type
+  status: 200
+  response_headers:
+    X-WP-Total: '13'
+    X-WP-TotalPages: '13'
+    Link: <https://www.fabric8labs.com/wp-json/wp/v2/posts?per_page=1&page=2>; rel="next"
+  response:
+  - id: 594
+    date: '2026-06-15T09:45:35'
+    slug: fabric8labs-aqcuired-tdk-scaling-ecam
+    type: post
+    link: https://www.fabric8labs.com/fabric8labs-aqcuired-tdk-scaling-ecam/
+    title:
+      rendered: Fabric8Labs to be Acquired by TDK Corporation, Accelerating Electrochemical Additive
+        Manufacturing for Data Center and High-Growth Electronics Markets
+    featured_media: 595
+    categories:
+    - 7
+  note: Demonstrates the rendered-object shape of title and the integer id references in categories
+    and featured_media.
+- name: Unified search across public content
+  operation: listSearch
+  spec: openapi/fabric8labs-search-api-openapi.yml
+  request: GET /wp-json/wp/v2/search?per_page=3&search=cooling
+  status: 200
+  response_headers:
+    X-WP-Total: '28'
+  response:
+  - id: 562
+    title: 'Tech showcase: Enabling high-density cooling with ECAM'
+    url: https://www.fabric8labs.com/tech-showcase-enabling-high-density-cooling-with-ecam/
+    type: post
+    subtype: post
+  - id: 539
+    title: 'Cooling: The Real AI Accelerator Bottleneck'
+    url: https://www.fabric8labs.com/ai-accelerator-cooling-bottleneck/
+    type: post
+    subtype: post
+  - id: 509
+    title: ECAM vs Legacy Liquid Cooling
+    url: https://www.fabric8labs.com/ecam-vs-legacy-liquid-cooling-cold-plates/
+    type: post
+    subtype: page
+  note: >-
+    The single most useful operation on the surface. subtype tells you which collection to resolve
+    the id against — note the third result is a page, not a post, even though type reads "post".
+    _links.self on each result carries the correct collection href.
+- name: List content categories
+  operation: listCategories
+  spec: openapi/fabric8labs-taxonomy-api-openapi.yml
+  request: GET /wp-json/wp/v2/categories?per_page=10&_fields=id,name,slug,count,parent
+  status: 200
+  response_headers:
+    X-WP-Total: '6'
+  response:
+  - {id: 3, count: 0, name: Case Study, slug: case-study, parent: 0}
+  - {id: 4, count: 0, name: Guide, slug: guide, parent: 0}
+  - {id: 11, count: 2, name: Insights, slug: insights, parent: 0}
+  - {id: 7, count: 11, name: News, slug: news, parent: 0}
+  - {id: 1, count: 0, name: Uncategorized, slug: uncategorized, parent: 0}
+  - {id: 5, count: 0, name: White Paper, slug: white-paper, parent: 0}
+  note: Four of six categories are empty. Effectively all content sits under News (11) and Insights
+    (2).
+- name: List the leadership team custom post type
+  operation: listTeam
+  spec: openapi/fabric8labs-team-api-openapi.yml
+  request: GET /wp-json/wp/v2/team?per_page=3&_fields=id,slug,title,link
+  status: 200
+  response_headers:
+    X-WP-Total: '3'
+  response:
+  - id: 90
+    slug: team-member-name-3
+    link: https://www.fabric8labs.com/team/team-member-name-3/
+    title: {rendered: Team Member Name}
+  - id: 89
+    slug: team-member-name-2
+    link: https://www.fabric8labs.com/team/team-member-name-2/
+    title: {rendered: Team Member Name}
+  - id: 88
+    slug: team-member-name
+    link: https://www.fabric8labs.com/team/team-member-name/
+    title: {rendered: Team Member Name}
+  note: >-
+    Recorded exactly as returned. All three records are unedited theme placeholder content — the
+    custom post type is registered and publicly exposed but was never populated with real people.
+    The real leadership team is rendered on /about/ from another source. This is a genuine data
+    finding, not a fetch error.
+- name: Invalid parameter
+  operation: listPosts
+  spec: openapi/fabric8labs-posts-api-openapi.yml
+  request: GET /wp-json/wp/v2/posts?per_page=999
+  status: 400
+  response:
+    code: rest_invalid_param
+    message: 'Invalid parameter(s): per_page'
+    data:
+      status: 400
+      params:
+        per_page: per_page must be between 1 (inclusive) and 100 (inclusive)
+- name: Record not found
+  operation: getPostsById
+  spec: openapi/fabric8labs-posts-api-openapi.yml
+  request: GET /wp-json/wp/v2/posts/999999
+  status: 404
+  response:
+    code: rest_post_invalid_id
+    message: Invalid post ID.
+    data:
+      status: 404
+- name: MCP tools/list is gated
+  operation: null
+  request: POST /wp-json/mcp/mcp-oauth-server with {"jsonrpc":"2.0","id":1,"method":"tools/list"}
+  status: 401
+  response_headers:
+    WWW-Authenticate: Bearer realm="https://www.fabric8labs.com", resource_metadata="https://www.fabric8labs.com/.well-known/oauth-protected-resource"
+  response:
+    code: mcp_unauthorized
+    message: MCP authentication required.
+    data:
+      status: 401
+  note: Included because the absence of a tool list is itself the measurement. See
+    mcp/fabric8labs-tool-crosswalk.yml.
+x-evidence:
+  fetched: '2026-08-12'
+  host: www.fabric8labs.com

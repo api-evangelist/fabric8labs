@@ -1,0 +1,65 @@
+generated: '2026-08-12'
+method: probed
+source: >-
+  Response headers observed on live anonymous requests to https://www.fabric8labs.com/wp-json, plus
+  https://www.fabric8labs.com/robots.txt. There is no documentation to search — the company
+  publishes no developer docs.
+limit_count: 0
+limits: []
+note: >-
+  No rate limit is published and none is signalled at runtime. Not one of X-RateLimit-Limit,
+  X-RateLimit-Remaining, X-RateLimit-Reset, the RFC 9239 RateLimit-* family, or Retry-After appeared
+  on any response across the nineteen operations exercised. No 429 was observed. The site sits
+  behind Cloudflare in front of WP Engine, both of which apply undisclosed edge protections, so a
+  client will eventually be throttled or challenged with no advance signal and no documented budget
+  to plan against. An agent cannot behave well here because the API tells it nothing.
+response_headers:
+  rate_limit_headers_present: false
+  observed:
+  - X-WP-Total
+  - X-WP-TotalPages
+  - Link
+  - Cache-Control
+  - Last-Modified
+  - Allow
+  - Access-Control-Expose-Headers
+  absent:
+  - X-RateLimit-Limit
+  - X-RateLimit-Remaining
+  - X-RateLimit-Reset
+  - RateLimit-Limit
+  - RateLimit-Remaining
+  - RateLimit-Reset
+  - RateLimit-Policy
+  - Retry-After
+exhaustion_status_code: null
+pagination_ceiling:
+  param: per_page
+  maximum: 100
+  enforcement: HTTP 400 rest_invalid_param
+  note: >-
+    The only hard, documented-in-schema quantitative ceiling on the surface. It caps page size, not
+    request rate, so it is recorded here as a boundary an integrator must respect rather than as a
+    rate limit.
+crawl_guidance:
+  source: https://www.fabric8labs.com/robots.txt
+  crawl_delay: 10
+  note: >-
+    robots.txt sets Crawl-delay: 10. It is advisory and aimed at crawlers rather than API clients,
+    but it is the only throttling expectation the host publishes anywhere, so a well-behaved client
+    should treat roughly one request per ten seconds as the stated preference.
+caching_as_mitigation:
+  cache_control: max-age=600, must-revalidate
+  last_modified: true
+  etag: false
+  note: Responses are cacheable for 10 minutes and carry Last-Modified, so conditional requests are
+    the available way to reduce load in the absence of a published budget.
+x-evidence:
+  fetched: '2026-08-12'
+  urls:
+  - url: https://www.fabric8labs.com/wp-json/wp/v2/posts?per_page=2&page=1
+    status: 200
+  - url: https://www.fabric8labs.com/wp-json/wp/v2/posts?per_page=999
+    status: 400
+  - url: https://www.fabric8labs.com/robots.txt
+    status: 200

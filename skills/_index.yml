@@ -1,0 +1,19 @@
+generated: '2026-08-12'
+method: generated
+source: >-
+  Authored by the API Evangelist enrichment pipeline against openapi/, conventions/, errors/ and
+  data-model/. Fabric8Labs publishes no AGENTS.md, no skill files and no agent guidance of any kind
+  — searched and not found — so these are generated, not harvested. Every operationId referenced in
+  every step was verified to exist verbatim in the linked OpenAPI document.
+note: >-
+  Only two skills exist because the surface only supports two honest flows. There is no write path,
+  no auth flow to package, no sandbox and no product API, so any further skill would be padding.
+skills:
+- file: fabric8labs-read-newsroom.md
+  name: Read the Fabric8Labs newsroom
+  api: openapi/fabric8labs-posts-api-openapi.yml
+  operations: [listPosts, getPostsById, listCategories, getCategoriesById, listMedia, getMediaById]
+- file: fabric8labs-search-and-inventory-content.md
+  name: Search and inventory all Fabric8Labs public content
+  api: openapi/fabric8labs-search-api-openapi.yml
+  operations: [listSearch, listTypes, getTypesById, listTaxonomies, getTaxonomiesById, listStatuses, listPosts, listPages]

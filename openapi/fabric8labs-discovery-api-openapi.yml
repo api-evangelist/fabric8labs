@@ -1,0 +1,462 @@
+openapi: 3.1.0
+info:
+  title: Fabric8Labs Discovery API
+  version: wp/v2
+  description: Read-only view of the public WordPress REST API (namespace wp/v2) served by www.fabric8labs.com.
+    Derived by API Evangelist from the live, anonymous route index at https://www.fabric8labs.com/wp-json
+    and the per-route OPTIONS schema documents the site serves. Only operations verified to answer anonymously
+    with HTTP 200 are included; the write methods WordPress also registers on these routes require authentication
+    and are not part of this public surface.
+  contact:
+    name: Fabric8Labs
+    url: https://www.fabric8labs.com/contact-us/
+servers:
+- url: https://www.fabric8labs.com/wp-json
+tags:
+- name: Discovery
+  description: Discovery resources on www.fabric8labs.com.
+paths:
+  /wp/v2/types:
+    get:
+      operationId: listTypes
+      summary: List post types
+      description: Returns a paginated collection of post types published on www.fabric8labs.com.
+      tags:
+      - Discovery
+      parameters:
+      - name: context
+        in: query
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+        description: Scope under which the request is made; determines fields present in response.
+      responses:
+        '200':
+          description: A list of post types.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Type'
+          headers:
+            X-WP-Total:
+              description: Total number of matching records.
+              schema:
+                type: integer
+            X-WP-TotalPages:
+              description: Total number of pages available.
+              schema:
+                type: integer
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /wp/v2/types/{type}:
+    get:
+      operationId: getTypesById
+      summary: Retrieve a single post type
+      description: Returns one record from the post types collection on www.fabric8labs.com.
+      tags:
+      - Discovery
+      parameters:
+      - name: type
+        in: path
+        schema:
+          type: string
+        description: An alphanumeric identifier for the post type.
+        required: true
+      - name: context
+        in: query
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+        description: Scope under which the request is made; determines fields present in response.
+      responses:
+        '200':
+          description: A single post type.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Type'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /wp/v2/taxonomies:
+    get:
+      operationId: listTaxonomies
+      summary: List taxonomies
+      description: Returns a paginated collection of taxonomies published on www.fabric8labs.com.
+      tags:
+      - Discovery
+      parameters:
+      - name: context
+        in: query
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+        description: Scope under which the request is made; determines fields present in response.
+      - name: type
+        in: query
+        schema:
+          type: string
+        description: Limit results to taxonomies associated with a specific post type.
+      responses:
+        '200':
+          description: A list of taxonomies.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Taxonomy'
+          headers:
+            X-WP-Total:
+              description: Total number of matching records.
+              schema:
+                type: integer
+            X-WP-TotalPages:
+              description: Total number of pages available.
+              schema:
+                type: integer
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /wp/v2/taxonomies/{taxonomy}:
+    get:
+      operationId: getTaxonomiesById
+      summary: Retrieve a single taxonomie
+      description: Returns one record from the taxonomies collection on www.fabric8labs.com.
+      tags:
+      - Discovery
+      parameters:
+      - name: taxonomy
+        in: path
+        schema:
+          type: string
+        description: An alphanumeric identifier for the taxonomy.
+        required: true
+      - name: context
+        in: query
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+        description: Scope under which the request is made; determines fields present in response.
+      responses:
+        '200':
+          description: A single taxonomie.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Taxonomy'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /wp/v2/statuses:
+    get:
+      operationId: listStatuses
+      summary: List statuses
+      description: Returns a paginated collection of statuses published on www.fabric8labs.com.
+      tags:
+      - Discovery
+      parameters:
+      - name: context
+        in: query
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+        description: Scope under which the request is made; determines fields present in response.
+      responses:
+        '200':
+          description: A list of statuses.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Status'
+          headers:
+            X-WP-Total:
+              description: Total number of matching records.
+              schema:
+                type: integer
+            X-WP-TotalPages:
+              description: Total number of pages available.
+              schema:
+                type: integer
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /wp/v2/statuses/{status}:
+    get:
+      operationId: getStatusesById
+      summary: Retrieve a single statuse
+      description: Returns one record from the statuses collection on www.fabric8labs.com.
+      tags:
+      - Discovery
+      parameters:
+      - name: status
+        in: path
+        schema:
+          type: string
+        description: An alphanumeric identifier for the status.
+        required: true
+      - name: context
+        in: query
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+        description: Scope under which the request is made; determines fields present in response.
+      responses:
+        '200':
+          description: A single statuse.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Status'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  schemas:
+    Type:
+      title: type
+      type: object
+      properties:
+        capabilities:
+          description: All capabilities used by the post type.
+          type: object
+        description:
+          description: A human-readable description of the post type.
+          type: string
+        hierarchical:
+          description: Whether or not the post type should have children.
+          type: boolean
+        viewable:
+          description: Whether or not the post type can be viewed.
+          type: boolean
+        labels:
+          description: Human-readable labels for the post type for various contexts.
+          type: object
+        name:
+          description: The title for the post type.
+          type: string
+        slug:
+          description: An alphanumeric identifier for the post type.
+          type: string
+        supports:
+          description: All features, supported by the post type.
+          type: object
+        has_archive:
+          description: If the value is a string, the value will be used as the archive slug. If the value
+            is false the post type has no archive.
+          type:
+          - string
+          - boolean
+        taxonomies:
+          description: Taxonomies associated with post type.
+          type: array
+          items:
+            type: string
+        rest_base:
+          description: REST base route for the post type.
+          type: string
+        rest_namespace:
+          description: REST route's namespace for the post type.
+          type: string
+        visibility:
+          description: The visibility settings for the post type.
+          type: object
+          properties:
+            show_ui:
+              description: Whether to generate a default UI for managing this post type.
+              type: boolean
+            show_in_nav_menus:
+              description: Whether to make the post type available for selection in navigation menus.
+              type: boolean
+        icon:
+          description: The icon for the post type.
+          type: string
+        template:
+          type: array
+          description: The block template associated with the post type.
+        template_lock:
+          type:
+          - string
+          - boolean
+          enum:
+          - all
+          - insert
+          - contentOnly
+          - false
+          description: The template_lock associated with the post type, or false if none.
+    Taxonomy:
+      title: taxonomy
+      type: object
+      properties:
+        capabilities:
+          description: All capabilities used by the taxonomy.
+          type: object
+        description:
+          description: A human-readable description of the taxonomy.
+          type: string
+        hierarchical:
+          description: Whether or not the taxonomy should have children.
+          type: boolean
+        labels:
+          description: Human-readable labels for the taxonomy for various contexts.
+          type: object
+        name:
+          description: The title for the taxonomy.
+          type: string
+        slug:
+          description: An alphanumeric identifier for the taxonomy.
+          type: string
+        show_cloud:
+          description: Whether or not the term cloud should be displayed.
+          type: boolean
+        types:
+          description: Types associated with the taxonomy.
+          type: array
+          items:
+            type: string
+        rest_base:
+          description: REST base route for the taxonomy.
+          type: string
+        rest_namespace:
+          description: REST namespace route for the taxonomy.
+          type: string
+        visibility:
+          description: The visibility settings for the taxonomy.
+          type: object
+          properties:
+            public:
+              description: Whether a taxonomy is intended for use publicly either via the admin interface
+                or by front-end users.
+              type: boolean
+            publicly_queryable:
+              description: Whether the taxonomy is publicly queryable.
+              type: boolean
+            show_ui:
+              description: Whether to generate a default UI for managing this taxonomy.
+              type: boolean
+            show_admin_column:
+              description: Whether to allow automatic creation of taxonomy columns on associated post-types
+                table.
+              type: boolean
+            show_in_nav_menus:
+              description: Whether to make the taxonomy available for selection in navigation menus.
+              type: boolean
+            show_in_quick_edit:
+              description: Whether to show the taxonomy in the quick/bulk edit panel.
+              type: boolean
+    Status:
+      title: status
+      type: object
+      properties:
+        name:
+          description: The title for the status.
+          type: string
+        private:
+          description: Whether posts with this status should be private.
+          type: boolean
+        protected:
+          description: Whether posts with this status should be protected.
+          type: boolean
+        public:
+          description: Whether posts of this status should be shown in the front end of the site.
+          type: boolean
+        queryable:
+          description: Whether posts with this status should be publicly-queryable.
+          type: boolean
+        show_in_list:
+          description: Whether to include posts in the edit listing for their post type.
+          type: boolean
+        slug:
+          description: An alphanumeric identifier for the status.
+          type: string
+        date_floating:
+          description: Whether posts of this status may have floating published dates.
+          type: boolean
+    Error:
+      type: object
+      description: The WordPress REST API error envelope returned by www.fabric8labs.com.
+      properties:
+        code:
+          type: string
+          description: Machine-readable error code, e.g. rest_post_invalid_id.
+        message:
+          type: string
+          description: Human-readable error message.
+        data:
+          type: object
+          properties:
+            status:
+              type: integer
+              description: HTTP status code.
+            params:
+              type: object
+              description: Per-parameter validation messages, when present.
+      required:
+      - code
+      - message
+  responses:
+    BadRequest:
+      description: Invalid parameter.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Authentication required or insufficient permission.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: No record matches the request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'

@@ -1,0 +1,669 @@
+openapi: 3.1.0
+info:
+  title: Fabric8Labs Posts API
+  version: wp/v2
+  description: Read-only view of the public WordPress REST API (namespace wp/v2) served by www.fabric8labs.com.
+    Derived by API Evangelist from the live, anonymous route index at https://www.fabric8labs.com/wp-json
+    and the per-route OPTIONS schema documents the site serves. Only operations verified to answer anonymously
+    with HTTP 200 are included; the write methods WordPress also registers on these routes require authentication
+    and are not part of this public surface.
+  contact:
+    name: Fabric8Labs
+    url: https://www.fabric8labs.com/contact-us/
+servers:
+- url: https://www.fabric8labs.com/wp-json
+tags:
+- name: Posts
+  description: Posts resources on www.fabric8labs.com.
+paths:
+  /wp/v2/posts:
+    get:
+      operationId: listPosts
+      summary: List posts
+      description: Returns a paginated collection of posts published on www.fabric8labs.com.
+      tags:
+      - Posts
+      parameters:
+      - name: after
+        in: query
+        schema:
+          type: string
+          format: date-time
+        description: Limit response to posts published after a given ISO8601 compliant date.
+      - name: author
+        in: query
+        schema:
+          type: array
+          items:
+            type: integer
+          default: []
+        description: Limit result set to posts assigned to specific authors.
+      - name: author_exclude
+        in: query
+        schema:
+          type: array
+          items:
+            type: integer
+          default: []
+        description: Ensure result set excludes posts assigned to specific authors.
+      - name: before
+        in: query
+        schema:
+          type: string
+          format: date-time
+        description: Limit response to posts published before a given ISO8601 compliant date.
+      - name: categories
+        in: query
+        schema:
+          type: object
+        description: Limit result set to items with specific terms assigned in the categories taxonomy.
+      - name: categories_exclude
+        in: query
+        schema:
+          type: object
+        description: Limit result set to items except those with specific terms assigned in the categories
+          taxonomy.
+      - name: context
+        in: query
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+        description: Scope under which the request is made; determines fields present in response.
+      - name: exclude
+        in: query
+        schema:
+          type: array
+          items:
+            type: integer
+          default: []
+        description: Ensure result set excludes specific IDs.
+      - name: format
+        in: query
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - standard
+            - aside
+            - chat
+            - gallery
+            - link
+            - image
+            - quote
+            - status
+            - video
+            - audio
+        description: Limit result set to items assigned one or more given formats.
+      - name: ignore_sticky
+        in: query
+        schema:
+          type: boolean
+          default: true
+        description: Whether to ignore sticky posts or not.
+      - name: include
+        in: query
+        schema:
+          type: array
+          items:
+            type: integer
+          default: []
+        description: Limit result set to specific IDs.
+      - name: modified_after
+        in: query
+        schema:
+          type: string
+          format: date-time
+        description: Limit response to posts modified after a given ISO8601 compliant date.
+      - name: modified_before
+        in: query
+        schema:
+          type: string
+          format: date-time
+        description: Limit response to posts modified before a given ISO8601 compliant date.
+      - name: offset
+        in: query
+        schema:
+          type: integer
+        description: Offset the result set by a specific number of items.
+      - name: order
+        in: query
+        schema:
+          type: string
+          enum:
+          - asc
+          - desc
+          default: desc
+        description: Order sort attribute ascending or descending.
+      - name: orderby
+        in: query
+        schema:
+          type: string
+          enum:
+          - author
+          - date
+          - id
+          - include
+          - modified
+          - parent
+          - relevance
+          - slug
+          - include_slugs
+          - title
+          default: date
+        description: Sort collection by post attribute.
+      - name: page
+        in: query
+        schema:
+          type: integer
+          minimum: 1
+          default: 1
+        description: Current page of the collection.
+      - name: per_page
+        in: query
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 100
+          default: 10
+        description: Maximum number of items to be returned in result set.
+      - name: search
+        in: query
+        schema:
+          type: string
+        description: Limit results to those matching a string.
+      - name: search_columns
+        in: query
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - post_title
+            - post_content
+            - post_excerpt
+          default: []
+        description: Array of column names to be searched.
+      - name: search_semantics
+        in: query
+        schema:
+          type: string
+          enum:
+          - exact
+        description: How to interpret the search input.
+      - name: slug
+        in: query
+        schema:
+          type: array
+          items:
+            type: string
+        description: Limit result set to posts with one or more specific slugs.
+      - name: status
+        in: query
+        schema:
+          type: array
+          items:
+            type: string
+            enum:
+            - publish
+            - future
+            - draft
+            - pending
+            - private
+            - trash
+            - auto-draft
+            - inherit
+            - request-pending
+            - request-confirmed
+            - request-failed
+            - request-completed
+            - acf-disabled
+            - dp-rewrite-republish
+            - any
+          default: publish
+        description: Limit result set to posts assigned one or more statuses.
+      - name: sticky
+        in: query
+        schema:
+          type: boolean
+        description: Limit result set to items that are sticky.
+      - name: tags
+        in: query
+        schema:
+          type: object
+        description: Limit result set to items with specific terms assigned in the tags taxonomy.
+      - name: tags_exclude
+        in: query
+        schema:
+          type: object
+        description: Limit result set to items except those with specific terms assigned in the tags taxonomy.
+      - name: tax_relation
+        in: query
+        schema:
+          type: string
+          enum:
+          - AND
+          - OR
+        description: Limit result set based on relationship between multiple taxonomies.
+      responses:
+        '200':
+          description: A list of posts.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Post'
+          headers:
+            X-WP-Total:
+              description: Total number of matching records.
+              schema:
+                type: integer
+            X-WP-TotalPages:
+              description: Total number of pages available.
+              schema:
+                type: integer
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /wp/v2/posts/{id}:
+    get:
+      operationId: getPostsById
+      summary: Retrieve a single post
+      description: Returns one record from the posts collection on www.fabric8labs.com.
+      tags:
+      - Posts
+      parameters:
+      - name: id
+        in: path
+        schema:
+          type: integer
+        description: Unique identifier for the post.
+        required: true
+      - name: context
+        in: query
+        schema:
+          type: string
+          enum:
+          - view
+          - embed
+          - edit
+          default: view
+        description: Scope under which the request is made; determines fields present in response.
+      - name: excerpt_length
+        in: query
+        schema:
+          type: integer
+        description: Override the default excerpt length.
+      - name: password
+        in: query
+        schema:
+          type: string
+        description: The password for the post if it is password protected.
+      responses:
+        '200':
+          description: A single post.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+components:
+  schemas:
+    Post:
+      title: post
+      type: object
+      properties:
+        date:
+          description: The date the post was published, in the site's timezone.
+          type: string
+          format: date-time
+        date_gmt:
+          description: The date the post was published, as GMT.
+          type: string
+          format: date-time
+        guid:
+          description: The globally unique identifier for the post.
+          type: object
+          properties:
+            raw:
+              description: GUID for the post, as it exists in the database.
+              type: string
+            rendered:
+              description: GUID for the post, transformed for display.
+              type: string
+        id:
+          description: Unique identifier for the post.
+          type: integer
+        link:
+          description: URL to the post.
+          type: string
+          format: uri
+        modified:
+          description: The date the post was last modified, in the site's timezone.
+          type: string
+          format: date-time
+        modified_gmt:
+          description: The date the post was last modified, as GMT.
+          type: string
+          format: date-time
+        slug:
+          description: An alphanumeric identifier for the post unique to its type.
+          type: string
+        status:
+          description: A named status for the post.
+          type: string
+          enum:
+          - publish
+          - future
+          - draft
+          - pending
+          - private
+          - acf-disabled
+        type:
+          description: Type of post.
+          type: string
+        password:
+          description: A password to protect access to the content and excerpt.
+          type: string
+        permalink_template:
+          description: Permalink template for the post.
+          type: string
+        generated_slug:
+          description: Slug automatically generated from the post title.
+          type: string
+        class_list:
+          description: An array of the class names for the post container element.
+          type: array
+          items:
+            type: string
+        title:
+          description: The title for the post.
+          type: object
+          properties:
+            raw:
+              description: Title for the post, as it exists in the database.
+              type: string
+            rendered:
+              description: HTML title for the post, transformed for display.
+              type: string
+        content:
+          description: The content for the post.
+          type: object
+          properties:
+            raw:
+              description: Content for the post, as it exists in the database.
+              type: string
+            rendered:
+              description: HTML content for the post, transformed for display.
+              type: string
+            block_version:
+              description: Version of the content block format used by the post.
+              type: integer
+            protected:
+              description: Whether the content is protected with a password.
+              type: boolean
+        author:
+          description: The ID for the author of the post.
+          type: integer
+        excerpt:
+          description: The excerpt for the post.
+          type: object
+          properties:
+            raw:
+              description: Excerpt for the post, as it exists in the database.
+              type: string
+            rendered:
+              description: HTML excerpt for the post, transformed for display.
+              type: string
+            protected:
+              description: Whether the excerpt is protected with a password.
+              type: boolean
+        featured_media:
+          description: The ID of the featured media for the post.
+          type: integer
+        comment_status:
+          description: Whether or not comments are open on the post.
+          type: string
+          enum:
+          - open
+          - closed
+        ping_status:
+          description: Whether or not the post can be pinged.
+          type: string
+          enum:
+          - open
+          - closed
+        format:
+          description: The format for the post.
+          type: string
+          enum:
+          - standard
+          - aside
+          - chat
+          - gallery
+          - link
+          - image
+          - quote
+          - status
+          - video
+          - audio
+        meta:
+          description: Meta fields.
+          type: object
+          properties:
+            _acf_changed:
+              type: boolean
+              title: ''
+              description: ''
+              default: false
+            _yoast_wpseo_focuskw:
+              type: string
+              title: ''
+              description: ''
+              default: ''
+            _yoast_wpseo_title:
+              type: string
+              title: ''
+              description: ''
+              default: ''
+            _yoast_wpseo_metadesc:
+              type: string
+              title: ''
+              description: ''
+              default: ''
+            inline_featured_image:
+              type: boolean
+              title: ''
+              description: ''
+              default: false
+            _genesis_hide_title:
+              type: boolean
+              title: ''
+              description: ''
+              default: false
+            _genesis_hide_breadcrumbs:
+              type: boolean
+              title: ''
+              description: ''
+              default: false
+            _genesis_hide_singular_image:
+              type: boolean
+              title: ''
+              description: ''
+              default: false
+            _genesis_hide_footer_widgets:
+              type: boolean
+              title: ''
+              description: ''
+              default: false
+            _genesis_custom_body_class:
+              type: string
+              title: ''
+              description: ''
+              default: ''
+            _genesis_custom_post_class:
+              type: string
+              title: ''
+              description: ''
+              default: ''
+            _genesis_layout:
+              type: string
+              title: ''
+              description: ''
+              default: ''
+            footnotes:
+              type: string
+              title: ''
+              description: ''
+              default: ''
+        sticky:
+          description: Whether or not the post should be treated as sticky.
+          type: boolean
+        template:
+          description: The theme file to use to display the post.
+          type: string
+        categories:
+          description: The terms assigned to the post in the category taxonomy.
+          type: array
+          items:
+            type: integer
+        tags:
+          description: The terms assigned to the post in the post_tag taxonomy.
+          type: array
+          items:
+            type: integer
+        acf:
+          description: ACF field data
+          type: object
+          properties: []
+      links:
+      - rel: https://api.w.org/action-publish
+        title: The current user can publish this post.
+        href: https://www.fabric8labs.com/wp-json/wp/v2/posts/{id}
+        targetSchema:
+          type: object
+          properties:
+            status:
+              type: string
+              enum:
+              - publish
+              - future
+      - rel: https://api.w.org/action-unfiltered-html
+        title: The current user can post unfiltered HTML markup and JavaScript.
+        href: https://www.fabric8labs.com/wp-json/wp/v2/posts/{id}
+        targetSchema:
+          type: object
+          properties:
+            content:
+              raw:
+                type: string
+      - rel: https://api.w.org/action-sticky
+        title: The current user can sticky this post.
+        href: https://www.fabric8labs.com/wp-json/wp/v2/posts/{id}
+        targetSchema:
+          type: object
+          properties:
+            sticky:
+              type: boolean
+      - rel: https://api.w.org/action-assign-author
+        title: The current user can change the author on this post.
+        href: https://www.fabric8labs.com/wp-json/wp/v2/posts/{id}
+        targetSchema:
+          type: object
+          properties:
+            author:
+              type: integer
+      - rel: https://api.w.org/action-assign-categories
+        title: The current user can assign terms in the category taxonomy.
+        href: https://www.fabric8labs.com/wp-json/wp/v2/posts/{id}
+        targetSchema:
+          type: object
+          properties:
+            categories:
+              type: array
+              items:
+                type: integer
+      - rel: https://api.w.org/action-create-categories
+        title: The current user can create terms in the category taxonomy.
+        href: https://www.fabric8labs.com/wp-json/wp/v2/posts/{id}
+        targetSchema:
+          type: object
+          properties:
+            categories:
+              type: array
+              items:
+                type: integer
+      - rel: https://api.w.org/action-assign-tags
+        title: The current user can assign terms in the post_tag taxonomy.
+        href: https://www.fabric8labs.com/wp-json/wp/v2/posts/{id}
+        targetSchema:
+          type: object
+          properties:
+            tags:
+              type: array
+              items:
+                type: integer
+      - rel: https://api.w.org/action-create-tags
+        title: The current user can create terms in the post_tag taxonomy.
+        href: https://www.fabric8labs.com/wp-json/wp/v2/posts/{id}
+        targetSchema:
+          type: object
+          properties:
+            tags:
+              type: array
+              items:
+                type: integer
+    Error:
+      type: object
+      description: The WordPress REST API error envelope returned by www.fabric8labs.com.
+      properties:
+        code:
+          type: string
+          description: Machine-readable error code, e.g. rest_post_invalid_id.
+        message:
+          type: string
+          description: Human-readable error message.
+        data:
+          type: object
+          properties:
+            status:
+              type: integer
+              description: HTTP status code.
+            params:
+              type: object
+              description: Per-parameter validation messages, when present.
+      required:
+      - code
+      - message
+  responses:
+    BadRequest:
+      description: Invalid parameter.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Authentication required or insufficient permission.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: No record matches the request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'

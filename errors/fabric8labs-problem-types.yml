@@ -1,0 +1,104 @@
+generated: '2026-08-12'
+method: derived
+source: >-
+  openapi/ 4xx responses plus error bodies observed live against
+  https://www.fabric8labs.com/wp-json. Fabric8Labs publishes no error reference to search — there is
+  no documentation host — so every code below was either declared in the OpenAPI documents derived
+  from the live route index or triggered against the running API and recorded verbatim.
+format: wordpress-rest
+rfc9457: false
+envelope:
+  content_type: application/json
+  fields:
+    code: Machine-readable error identifier.
+    message: Human-readable message.
+    data.status: HTTP status code, repeated in the body.
+    data.params: Map of parameter name to validation message (400 only).
+    data.details: Map of parameter name to a nested error object (400 only).
+  note: >-
+    The API does not emit application/problem+json and carries no type URI, so there is no
+    dereferenceable error documentation for an agent to follow. The code string is the only stable
+    identifier.
+problems:
+- status: 400
+  code: rest_invalid_param
+  title: Invalid parameter
+  detail: One or more query parameters failed validation. data.params names each offending parameter
+    and data.details carries a nested code such as rest_out_of_bounds.
+  observed: true
+  example: '{"code":"rest_invalid_param","message":"Invalid parameter(s): per_page","data":{"status":400,"params":{"per_page":"per_page
+    must be between 1 (inclusive) and 100 (inclusive)"}}}'
+  remediation: Keep per_page between 1 and 100; check enum values for context, order and orderby
+    against the OpenAPI parameter schemas.
+  source_operation: openapi/fabric8labs-posts-api-openapi.yml#listPosts
+- status: 404
+  code: rest_post_invalid_id
+  title: Invalid post ID
+  detail: No published record exists with the requested id in this collection, or it exists but is
+    not publicly visible.
+  observed: true
+  example: '{"code":"rest_post_invalid_id","message":"Invalid post ID.","data":{"status":404}}'
+  remediation: Resolve ids from the collection endpoint or from /wp/v2/search before requesting a
+    single record.
+  source_operation: openapi/fabric8labs-posts-api-openapi.yml#getPostsById
+- status: 404
+  code: rest_no_route
+  title: No route was found matching the URL and request method
+  detail: The path is not registered in the wp-json route index.
+  observed: false
+  remediation: Fetch https://www.fabric8labs.com/wp-json and use a registered route.
+- status: 401
+  code: rest_forbidden
+  title: Insufficient permission
+  detail: The route exists but requires authentication. Returned by /wp/v2/settings,
+    /wp-abilities/v1/abilities, /wp-abilities/v1/categories and /gf/v2/forms.
+  observed: true
+  example: '{"code":"rest_forbidden","message":"Sorry, you are not allowed to do that.","data":{"status":401}}'
+  remediation: These routes are administrative. There is no public credential Fabric8Labs issues for
+    them.
+- status: 401
+  code: rest_user_cannot_view
+  title: Cannot list users
+  detail: Returned by /wp/v2/users. The user directory is not anonymously readable on this site.
+  observed: true
+  example: '{"code":"rest_user_cannot_view","message":"Sorry, you are not allowed to list users.","data":{"status":401}}'
+  remediation: Use /wp/v2/team for the publicly published leadership directory instead.
+- status: 401
+  code: mcp_unauthorized
+  title: MCP authentication required
+  detail: >-
+    Returned by the MCP endpoints. Accompanied by WWW-Authenticate: Bearer
+    realm="https://www.fabric8labs.com",
+    resource_metadata="https://www.fabric8labs.com/.well-known/oauth-protected-resource".
+  observed: true
+  example: '{"code":"mcp_unauthorized","message":"MCP authentication required.","data":{"status":401}}'
+  remediation: Obtain an OAuth 2.1 token with scope "mcp" from
+    https://www.fabric8labs.com/oauth/token. No public client registration path is advertised.
+- status: 403
+  code: rest_comment_disabled
+  title: Comments are disabled
+  detail: The comments collection is registered by WordPress core but disabled site-wide, so it
+    returns 403 rather than an empty list.
+  observed: true
+  example: '{"code":"rest_comment_disabled","message":"Comments are disabled.","data":{"status":403}}'
+  remediation: None. There is no comment surface on this site; the route is not included in
+    openapi/.
+coverage:
+  codes_observed_live: 6
+  codes_declared_only: 1
+  rfc9457_conformant: false
+x-evidence:
+  fetched: '2026-08-12'
+  urls:
+  - url: https://www.fabric8labs.com/wp-json/wp/v2/posts?per_page=999
+    status: 400
+  - url: https://www.fabric8labs.com/wp-json/wp/v2/posts/999999
+    status: 404
+  - url: https://www.fabric8labs.com/wp-json/wp/v2/settings
+    status: 401
+  - url: https://www.fabric8labs.com/wp-json/wp/v2/users
+    status: 401
+  - url: https://www.fabric8labs.com/wp-json/wp/v2/comments
+    status: 403
+  - url: https://www.fabric8labs.com/wp-json/mcp/mcp-oauth-server
+    status: 401
