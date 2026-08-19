@@ -1,0 +1,156 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Fabric8Labs Discovery API",
+    "version": "wp/v2"
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Discovery",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List post types",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://www.fabric8labs.com/wp-json/wp/v2/types",
+            "params": [
+              {
+                "name": "context",
+                "value": "",
+                "type": "query",
+                "description": "Scope under which the request is made; determines fields present in response."
+              }
+            ]
+          },
+          "docs": "Returns a paginated collection of post types published on www.fabric8labs.com."
+        },
+        {
+          "info": {
+            "name": "Retrieve a single post type",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://www.fabric8labs.com/wp-json/wp/v2/types/:type",
+            "params": [
+              {
+                "name": "type",
+                "value": "",
+                "type": "path",
+                "description": "An alphanumeric identifier for the post type."
+              },
+              {
+                "name": "context",
+                "value": "",
+                "type": "query",
+                "description": "Scope under which the request is made; determines fields present in response."
+              }
+            ]
+          },
+          "docs": "Returns one record from the post types collection on www.fabric8labs.com."
+        },
+        {
+          "info": {
+            "name": "List taxonomies",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://www.fabric8labs.com/wp-json/wp/v2/taxonomies",
+            "params": [
+              {
+                "name": "context",
+                "value": "",
+                "type": "query",
+                "description": "Scope under which the request is made; determines fields present in response."
+              },
+              {
+                "name": "type",
+                "value": "",
+                "type": "query",
+                "description": "Limit results to taxonomies associated with a specific post type."
+              }
+            ]
+          },
+          "docs": "Returns a paginated collection of taxonomies published on www.fabric8labs.com."
+        },
+        {
+          "info": {
+            "name": "Retrieve a single taxonomie",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://www.fabric8labs.com/wp-json/wp/v2/taxonomies/:taxonomy",
+            "params": [
+              {
+                "name": "taxonomy",
+                "value": "",
+                "type": "path",
+                "description": "An alphanumeric identifier for the taxonomy."
+              },
+              {
+                "name": "context",
+                "value": "",
+                "type": "query",
+                "description": "Scope under which the request is made; determines fields present in response."
+              }
+            ]
+          },
+          "docs": "Returns one record from the taxonomies collection on www.fabric8labs.com."
+        },
+        {
+          "info": {
+            "name": "List statuses",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://www.fabric8labs.com/wp-json/wp/v2/statuses",
+            "params": [
+              {
+                "name": "context",
+                "value": "",
+                "type": "query",
+                "description": "Scope under which the request is made; determines fields present in response."
+              }
+            ]
+          },
+          "docs": "Returns a paginated collection of statuses published on www.fabric8labs.com."
+        },
+        {
+          "info": {
+            "name": "Retrieve a single statuse",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://www.fabric8labs.com/wp-json/wp/v2/statuses/:status",
+            "params": [
+              {
+                "name": "status",
+                "value": "",
+                "type": "path",
+                "description": "An alphanumeric identifier for the status."
+              },
+              {
+                "name": "context",
+                "value": "",
+                "type": "query",
+                "description": "Scope under which the request is made; determines fields present in response."
+              }
+            ]
+          },
+          "docs": "Returns one record from the statuses collection on www.fabric8labs.com."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}
