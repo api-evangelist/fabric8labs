@@ -1,12 +1,8 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
   title: Fabric8Labs Pages API
   version: wp/v2
-  description: Read-only view of the public WordPress REST API (namespace wp/v2) served by www.fabric8labs.com.
-    Derived by API Evangelist from the live, anonymous route index at https://www.fabric8labs.com/wp-json
-    and the per-route OPTIONS schema documents the site serves. Only operations verified to answer anonymously
-    with HTTP 200 are included; the write methods WordPress also registers on these routes require authentication
-    and are not part of this public surface.
+  description: Read-only view of the public WordPress REST API (namespace wp/v2) served by www.fabric8labs.com. Derived by API Evangelist from the live, anonymous route index at https://www.fabric8labs.com/wp-json and the per-route OPTIONS schema documents the site serves. Only operations verified to answer anonymously with HTTP 200 are included; the write methods WordPress also registers on these routes require authentication and are not part of this public surface.
   contact:
     name: Fabric8Labs
     url: https://www.fabric8labs.com/contact-us/
@@ -285,6 +281,25 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
 components:
+  responses:
+    BadRequest:
+      description: Invalid parameter.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Authentication required or insufficient permission.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: No record matches the request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
   schemas:
     Page:
       title: page
@@ -528,22 +543,3 @@ components:
       required:
       - code
       - message
-  responses:
-    BadRequest:
-      description: Invalid parameter.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    Unauthorized:
-      description: Authentication required or insufficient permission.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'
-    NotFound:
-      description: No record matches the request.
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Error'

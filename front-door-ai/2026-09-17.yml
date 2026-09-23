@@ -1,0 +1,25 @@
+# Front Door AI Index — fabric8labs — 2026-09-17
+# AI vocabulary counted on the provider's root page. Generated; do not edit.
+# `score` is null unless ownership is `own` — see front_door_ai.py.
+front_door_ai:
+  slug: fabric8labs
+  lexicon_version: '1.0'
+  probed_at: '2026-09-17'
+  host: www.fabric8labs.com
+  final_host: www.fabric8labs.com
+  ownership: own
+  owner: fabric8labs
+  shares_host_with: null
+  inherited_from: null
+  verdict: scored
+  score: 3
+  host_score: 3
+  density: 5.83
+  words: 515
+  tiers:
+    agentic: 0
+    core: 3
+    model: 0
+  ambiguous: 0
+  top_terms:
+    AI: 3
