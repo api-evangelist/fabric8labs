@@ -64,5 +64,133 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Fabric8Labs is a company surfaced via the API Evangelist harvest backlog (source: secondary-market) and added to the network as a stub for full-pipeline profiling.
-- https://forgeglobal.com/fabric8labs_stock/
+Fabric8Labs is a San Diego, California based advanced-manufacturing company founded in 2015 that invented and commercialized Electrochemical Additive Manufacturing (ECAM), a room-temperature metal 3D printing process that uses a patented microelectrode array printhead to electroplate copper ions out of a water-based metal-salt solution pixel by pixel. Unlike powder-bed and laser metal additive methods, ECAM needs no high-temperature step, no expensive metal powder feedstock and effectively no post-processing, prints at micron-scale resolution directly onto temperature-sensitive substrates, and the company reports more than a 90% reduction in greenhouse gas emissions against alternative additive and traditional manufacturing routes. Fabric8Labs operates as both a technology developer and a production foundry, manufacturing high-precision components for data-center liquid cooling and AI/HPC thermal management (cold plates, single-phase, two-phase and immersion cooling), RF and wireless communications, satellite and aerospace systems, power electronics, photonics cooling, semiconductors, medical devices and luxury goods. It has raised funding from Intel Capital, TDK Ventures and others, including a $50M round announced in November 2025 to expand United States manufacturing capacity toward tens of millions of components annually, and on 10 June 2026 announced it will be acquired by TDK Corporation — the company continues under existing leadership, with ECAM folded into TDK's global manufacturing network. Fabric8Labs publishes no product, customer or developer API and runs no developer program; the only machine-readable surface on fabric8labs.com is the public WordPress REST API (namespace wp/v2) that serves the company newsroom, site pages, leadership team directory, taxonomy and media library as JSON, alongside a WordPress MCP Adapter endpoint and RFC 8414/RFC 9728 OAuth discovery documents that are served but authentication-gated.
+
+**Areas:** Company · Advanced Manufacturing · 3D Printing · Metal 3D Printing · Electrochemical Additive Manufacturing · Thermal Management · Liquid Cooling · Data Center · Semiconductors · Electronics · Aerospace · Photonics
+
+## Fabric8Labs on APIs.io
+
+Everything profiled for Fabric8Labs is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/fabric8labs/](https://apis.io/providers/fabric8labs/)** — or go straight to one of the APIs or properties below.
+
+### APIs (2)
+
+- [Fabric8Labs MCP Server (WordPress MCP Adapter)](https://apis.io/apis/fabric8labs/mcp/) — A Model Context Protocol server endpoint registered on www.fabric8labs.com under the WordPress REST "mcp" namespace and served at…
+- [Fabric8Labs Website (WordPress REST)](https://apis.io/apis/fabric8labs/fabric8labs-com-website-wordpress-rest/) — The public WordPress REST API (wp-json) of the Fabric8Labs website at www.fabric8labs.com: the route index of the site's content management system,…
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### MCP servers (1)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [fabric8labs](https://apis.io/servers/fabric8labs/fabric8labs/)
+
+#### Agentic access (1)
+
+Which operations an agent can call, which act, and which need a human in the loop.
+
+- [Fabric8Labs Agentic Access](https://apis.io/agentic-access/fabric8labs/fabric8labs-agentic-access/)
+
+#### Collections (7)
+
+Postman and Open Collection request collections.
+
+- [Moved to /providers/fabric8labs/](https://apis.io/collections/fabric8labs/open-fabric8labs-discovery-api/)
+- [Moved to /providers/fabric8labs/](https://apis.io/collections/fabric8labs/open-fabric8labs-media-api/)
+- [Moved to /providers/fabric8labs/](https://apis.io/collections/fabric8labs/open-fabric8labs-pages-api/)
+- [Moved to /providers/fabric8labs/](https://apis.io/collections/fabric8labs/open-fabric8labs-posts-api/)
+- [Moved to /providers/fabric8labs/](https://apis.io/collections/fabric8labs/open-fabric8labs-search-api/)
+- [Moved to /providers/fabric8labs/](https://apis.io/collections/fabric8labs/open-fabric8labs-taxonomy-api/)
+- [Moved to /providers/fabric8labs/](https://apis.io/collections/fabric8labs/open-fabric8labs-team-api/)
+
+#### Security (2)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Fabric8Labs Authentication](https://apis.io/security/fabric8labs/fabric8labs-authentication/)
+- [Fabric8Labs Domain Security](https://apis.io/security/fabric8labs/fabric8labs-domain-security/)
+
+#### OAuth scopes (1)
+
+The permissions the API asks for.
+
+- [Fabric8Labs Scopes](https://apis.io/scopes/fabric8labs/fabric8labs-scopes/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Fabric8Labs Plans Pricing](https://apis.io/plans/fabric8labs/fabric8labs-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Fabric8Labs Rate Limits](https://apis.io/rate-limits/fabric8labs/fabric8labs-rate-limits/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://www.fabric8labs.com/)
+- [Support](https://www.fabric8labs.com/contact-us/)
+- [Blog](https://www.fabric8labs.com/press/)
+- [Privacy policy](https://www.fabric8labs.com/privacy-policy/)
+- [GitHub](https://github.com/Fabric8Labs)
+
+## API Evangelist rating
+
+**Kin Score 19.5** — emerging · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 61.7 |
+| Contract quality | 6.5 |
+| Contract governance | 4.5 |
+| Operational transparency | 2.6 |
+| Developer ergonomics | 30.4 |
+| Access clarity | 10.5 |
+
+**Agent readiness 23.7** — agent-aware
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | — |
+| Agentic Access | derived (partial credit) |
+| Reversibility Documented | — |
+| MCP Server | platform (partial credit) |
+| Auth Clarity | served (partial credit) |
+| Idempotency | — |
+| Error Semantics | derived (partial credit) |
+| OpenAPI Examples | documented (partial credit) |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | — |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | served (partial credit) |
+| Protected Resource Metadata | verified |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+| Pagination Ratio | na |
+| Operation Distinctiveness | na |
+
+**Regulatory alignment 31.1** — Energy & Utilities
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/fabric8labs/](https://apis.io/providers/fabric8labs/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Fabric8Labs: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/fabric8labs/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
